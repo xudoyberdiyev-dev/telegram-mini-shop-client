@@ -42,7 +42,7 @@ export default function Category() {
                     const isActive = activeId === cat.id;
 
                     return (
-                        <div>
+                        <div key={cat.id}>
                             <motion.div
                                 key={cat.id}
                                 onClick={() => setActiveId(cat.id)}
