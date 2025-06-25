@@ -44,11 +44,11 @@ export default function Navbar() {
                     />
                     {showDropdown && (
                         <div className="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-xl p-3 text-sm z-50 animate-fadeIn">
-                            <p className="text-gray-700 font-semibold">👋 Salom, foydalanuvchi</p>
-                            <p className="text-gray-500 text-xs mb-2">📞 +998 90 123 45 67</p>
+                            <p className="text-gray-700 font-semibold"> Salom, foydalanuvchi</p>
+                            <p className="text-gray-500 text-xs mb-2">+998 90 123 45 67</p>
                             <hr className="my-1" />
                             <button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100 text-gray-700 transition">
-                                🔐 Chiqish
+                                 Chiqish
                             </button>
                         </div>
                     )}

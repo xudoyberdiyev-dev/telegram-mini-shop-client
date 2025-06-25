@@ -1,5 +1,6 @@
 import Category from "@/components/category";
 import Search from "@/components/search";
+import Products from "@/components/products";
 
 export default function Page() {
     return (
@@ -7,6 +8,7 @@ export default function Page() {
             <>
                 <Search/>
                 <Category/>
+                <Products/>
             </>
         </div>
     )

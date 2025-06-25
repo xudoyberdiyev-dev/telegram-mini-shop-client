@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-export default function EmptyCartPage() {
+export default function Page() {
     return (
         <div className="flex items-center justify-center min-h-[80vh] bg-gray-100 px-4">
             <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">

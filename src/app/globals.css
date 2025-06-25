@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* Tailwind bilan scrollbarni yashirish */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
@@ -9,4 +10,8 @@
 .scrollbar-hide {
     -ms-overflow-style: none; /* IE va Edge */
     scrollbar-width: none; /* Firefox */
+}
+
+body {
+    @apply font-sans;
 }
