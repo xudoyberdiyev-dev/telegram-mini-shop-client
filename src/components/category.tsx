@@ -32,7 +32,6 @@ const category: Category[] = [
     },
     {id: 5, name: 'Mevalar', imageUrl: ''},
 ];
-//bu yerda maxulot kategoryalari chiqib turadi
 export default function Category() {
     const [activeId, setActiveId] = useState(1);
     return (

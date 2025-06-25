@@ -84,10 +84,8 @@ export default function Products() {
                 </div>
             )}
 
-            {/* Modal pastdan chiqadi */}
             {selectedProduct && (
                 <div className="w-full h-[80%] fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl px-6 pt-4 pb-6 z-50 animate-slide-up">
-                    {/* Header */}
                     <div className="flex justify-between items-center mb-4">
                         <p className="text-lg font-bold text-gray-800">{selectedProduct.name}</p>
                         <button
@@ -99,7 +97,6 @@ export default function Products() {
                         </button>
                     </div>
 
-                    {/* Image */}
                     <div className="relative flex justify-center items-center mb-6">
                         <div className="absolute  w-48 h-48 bg-gradient-to-tr from-yellow-100 to-pink-100 rounded-full blur-2xl opacity-30 -z-10" />
                         <Image
@@ -111,12 +108,9 @@ export default function Products() {
                         />
                     </div>
 
-                    {/* Product Name */}
                     <p className="text-center text-xl font-semibold text-gray-800 mb-6">{selectedProduct.name}</p>
 
-                    {/* Quantity and Price */}
                     <div className="flex justify-between items-center mb-6 bg-gray-50 rounded-xl px-4 py-3 shadow-sm">
-                        {/* Counter */}
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => setCount(Math.max(1, count - 1))}
@@ -133,11 +127,9 @@ export default function Products() {
                             </button>
                         </div>
 
-                        {/* Price */}
                         <span className="text-yellow-600 text-lg font-bold">{selectedProduct.price}</span>
                     </div>
 
-                    {/* Description */}
                     <div className="mb-6">
                         <p className="text-md text-black font-semibold mb-1">Maxsulot haqida:</p>
                         <p className="text-sm text-gray-600 leading-relaxed">
@@ -145,7 +137,6 @@ export default function Products() {
                         </p>
                     </div>
 
-                    {/* Add to cart button */}
                     <button
                         onClick={() => {
                             handleAddToCart(selectedProduct);

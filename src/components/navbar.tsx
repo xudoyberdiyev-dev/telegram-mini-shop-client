@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { FiShoppingCart, FiUser } from 'react-icons/fi';
+import { FaRegUser } from "react-icons/fa";
+
+import { FaShoppingBasket } from 'react-icons/fa';
 
 export default function Navbar() {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -30,7 +33,7 @@ export default function Navbar() {
             <div className="flex items-center gap-4 text-gray-700 text-[22px] relative">
                 {/* Cart icon */}
                 <Link href="/card" className="relative group">
-                    <FiShoppingCart className="hover:text-yellow-600 transition-all duration-200" />
+                    <FaShoppingBasket className="hover:text-yellow-600 transition-all duration-200" />
                     <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center shadow-md group-hover:scale-110 transition">
             3
           </span>
@@ -38,7 +41,7 @@ export default function Navbar() {
 
                 {/* User dropdown */}
                 <div className="relative" ref={dropdownRef}>
-                    <FiUser
+                    <FaRegUser
                         onClick={() => setShowDropdown(!showDropdown)}
                         className="hover:text-yellow-600 transition cursor-pointer"
                     />
