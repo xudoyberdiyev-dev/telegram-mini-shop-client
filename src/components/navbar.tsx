@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { FiShoppingCart, FiUser } from 'react-icons/fi';
 import { FaRegUser } from "react-icons/fa";
 
 import { FaShoppingBasket } from 'react-icons/fa';
@@ -11,7 +10,6 @@ export default function Navbar() {
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef(null);
 
-    // tashqariga bosganda dropdownni yopish
     useEffect(() => {
         function handleClickOutside(e: any) {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
