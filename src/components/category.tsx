@@ -2,6 +2,7 @@
 
 import {useState} from 'react';
 import {motion} from 'framer-motion';
+import Image from 'next/image';
 
 type Category = {
     id: number;
@@ -54,17 +55,13 @@ export default function Category() {
                                         : 'bg-white hover:bg-gray-50'
                                 }`}
                             >
-                                <div className="w-[85px] rounded-xl h-[85px] ">
-                                    <img
-                                        src={cat.imageUrl}
-                                        alt={cat.name}
-                                        className="w-full h-full object-contain"
-                                    />
+                                <div  key={cat.id} className="w-[85px] rounded-xl h-[85px] ">
+                                    <Image src={cat.imageUrl} alt={cat.name} width={200} height={200} />
                                 </div>
 
 
                             </motion.div>
-                            <p
+                            <p  key={cat.id}
                                 className={` p-1 text-[13px] font-semibold text-center text-ellipsis overflow-hidden whitespace-nowrap w-[90px] ${
                                     isActive ? 'text-yellow-600' : 'text-gray-700'
                                 }`}
