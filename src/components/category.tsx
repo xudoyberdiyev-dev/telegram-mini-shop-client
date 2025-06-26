@@ -12,12 +12,12 @@ type Category = {
 const category: Category[] = [
     {
         id: 1,
-        name: 'Barchasi',
+        name: '',
         imageUrl: 'https://as2.ftcdn.net/jpg/00/41/23/51/1000_F_41235195_07oLBoDGjjIENt1R9ifNmtx0Be0k059r.jpg'
     },
     {
         id: 2,
-        name: 'Non',
+        name: 'Nonlar',
         imageUrl: 'https://as2.ftcdn.net/jpg/00/41/23/51/1000_F_41235195_07oLBoDGjjIENt1R9ifNmtx0Be0k059r.jpg'
     },
     {
@@ -27,7 +27,7 @@ const category: Category[] = [
     },
     {
         id: 4,
-        name: 'Sut ',
+        name: 'Sut',
         imageUrl: 'https://as2.ftcdn.net/jpg/00/41/23/51/1000_F_41235195_07oLBoDGjjIENt1R9ifNmtx0Be0k059r.jpg'
     },
     {id: 5, name: 'Mevalar', imageUrl: ''},
