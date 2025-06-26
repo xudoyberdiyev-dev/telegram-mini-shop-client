@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+    images: {
+        domains: ['as2.ftcdn.net'], // ← ruxsat berilgan host
+    },
 };
 
 export default nextConfig;

@@ -42,9 +42,10 @@ export default function Category() {
                     const isActive = activeId === cat.id;
 
                     return (
-                        <div>
+                        <div
+                            key={cat.id}
+                        >
                             <motion.div
-                                key={cat.id}
                                 onClick={() => setActiveId(cat.id)}
                                 whileTap={{scale: 0.95}}
                                 animate={{scale: isActive ? 1.05 : 1}}
@@ -55,13 +56,13 @@ export default function Category() {
                                         : 'bg-white hover:bg-gray-50'
                                 }`}
                             >
-                                <div  key={cat.id} className="w-[85px] rounded-xl h-[85px] ">
+                                <div  className="w-[85px] rounded-xl h-[85px] ">
                                     <Image src={cat.imageUrl} alt={cat.name} width={200} height={200} />
                                 </div>
 
 
                             </motion.div>
-                            <p  key={cat.id}
+                            <p
                                 className={` p-1 text-[13px] font-semibold text-center text-ellipsis overflow-hidden whitespace-nowrap w-[90px] ${
                                     isActive ? 'text-yellow-600' : 'text-gray-700'
                                 }`}

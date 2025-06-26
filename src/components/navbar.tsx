@@ -11,7 +11,7 @@ export default function Navbar() {
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        function handleClickOutside(e: any) {
+        function handleClickOutside(e: React.MouseEvent<HTMLButtonElement>) {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
                 setShowDropdown(false);
             }
