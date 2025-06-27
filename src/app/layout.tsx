@@ -2,12 +2,10 @@
 import './globals.css';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation'; // Bu ham kerak
-import Navbar from "@/components/navbar";
+import TabNavigation from "@/components/tabNavigation";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const [isMobile, setIsMobile] = useState(true);
-    const pathname = usePathname();
 
     useEffect(() => {
         const handleResize = () => {
@@ -22,19 +20,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     }, []);
 
     // Admin sahifalarni aniqlash
-    const isAdminPage =
-        pathname.startsWith('/category') ||
-        pathname.startsWith('/product') ||
-        pathname.startsWith('/orders');
 
     return (
         <html lang="uz">
         <body>
         {isMobile ? (
             <>
-                {/* Faqat admin sahifa bo'lmasa, Navbar chiqsin */}
-                {!isAdminPage && <Navbar />}
                 {children}
+                <TabNavigation />
             </>
         ) : (
             <div
