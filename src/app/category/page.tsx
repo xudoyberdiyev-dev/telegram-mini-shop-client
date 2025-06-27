@@ -1,25 +1,32 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Image from "next/image";
+import { useState, ChangeEvent } from 'react';
+import Image from 'next/image';
 
 export default function Page() {
-    const [showForm, setShowForm] = useState(false)
-    const [name, setName] = useState('')
-    const [image, setImage] = useState(null)
+    const [showForm, setShowForm] = useState(false);
+    const [name, setName] = useState('');
+    const [image, setImage] = useState<File | null>(null);
 
     const handleSave = () => {
         if (!name || !image) {
-            alert("Barcha maydonlarni to‘ldiring!")
-            return
+            alert("Barcha maydonlarni to‘ldiring!");
+            return;
         }
 
         // TODO: APIga yuborish joyi
-        alert(`Kategoriya: ${name}, Rasm: ${image}`)
-        setName('')
-        setImage(null)
-        setShowForm(false)
-    }
+        alert(`Kategoriya: ${name}, Rasm: ${image.name}`);
+        setName('');
+        setImage(null);
+        setShowForm(false);
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setImage(file);
+        }
+    };
 
     return (
         <div className="relative w-full min-h-screen bg-gray-100 p-4">
@@ -36,7 +43,7 @@ export default function Page() {
                 </button>
             </div>
 
-            {/* MODAL */}
+            {/* Modal */}
             {showForm && (
                 <div className="fixed inset-0 p-3 z-50 bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
@@ -44,7 +51,7 @@ export default function Page() {
                             Yangi kategoriya qo‘shish
                         </h2>
 
-                        {/* Rasm */}
+                        {/* Rasm input */}
                         <div className="mb-3">
                             <label className="block mb-1 font-medium text-sm text-gray-700">
                                 Rasm yuklang
@@ -52,12 +59,12 @@ export default function Page() {
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => setImage(e.target.files[0])}
+                                onChange={handleFileChange}
                                 className="w-full border border-gray-300 rounded-lg p-2"
                             />
                         </div>
 
-                        {/* Nomi */}
+                        {/* Nomi input */}
                         <div className="mb-4">
                             <label className="block mb-1 font-medium text-sm text-gray-700">
                                 Kategoriya nomi
@@ -90,38 +97,29 @@ export default function Page() {
                 </div>
             )}
 
-            {/* Kategoriya kartalari joylashadigan joy */}
+            {/* Kategoriya kartasi */}
             <div className="grid mt-5 grid-cols-2 gap-4">
                 <div className="bg-white rounded-xl shadow-md p-1 pb-1 flex flex-col items-center">
-                    {/* Rasm */}
                     <Image
-                        src="/images/example.jpg" // Rasm manzilingizni shu yerga yozing
+                        src="/images/example.jpg"
                         alt="Kategoriya rasmi"
-                        width={500} // haqiqiy rasm o‘lchamiga moslab o‘zgartiring
+                        width={500}
                         height={200}
                         className="w-full bg-red-300 h-32 object-cover rounded-lg"
                     />
-
-                    {/* Nomi */}
                     <h2 className="text-lg font-semibold text-yellow-900 mt-1 text-center">
                         salom
                     </h2>
-
-                    {/* Tugmalar */}
                     <div className="flex gap-2 mt-2">
-                        <button
-                            className="px-3 py-1.5 text-sm font-semibold  shadow-md shadow-black-200 text-yellow-900 rounded hover:bg-yellow-500-600"
-                        >
+                        <button className="px-3 py-1.5 text-sm font-semibold shadow-md text-yellow-900 rounded hover:bg-yellow-500-600">
                             Tahrirlash
                         </button>
-                        <button
-                            className="px-3 py-1.5 text-sm font-semibold  shadow-md shadow-black-200 text-yellow-900 rounded hover:bg-yellow-500-600"
-                        >
+                        <button className="px-3 py-1.5 text-sm font-semibold shadow-md text-yellow-900 rounded hover:bg-yellow-500-600">
                             O‘chirish
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
