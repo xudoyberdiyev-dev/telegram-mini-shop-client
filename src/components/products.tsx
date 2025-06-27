@@ -33,7 +33,7 @@ export default function Products() {
     const [cart, setCart] = useState<Product[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    const handleAddToCart = (product: Product) => {
+    const handleAddToCart = (product: { quantity: number }) => {
         setCart([...cart, product]);
     };
     useEffect(() => {
