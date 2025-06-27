@@ -56,11 +56,14 @@ export default function Page() {
             setPreviewImage(null);
             setShowForm(false);
             getCategory();
-        } catch (err) {
-            const msg = err.response?.data?.msg || "Xatolik yuz berdi";
-            alert(msg);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const msg = err.response?.data?.msg || "Xatolik yuz berdi";
+                alert(msg);
+            } else {
+                alert("Noma’lum xatolik yuz berdi");
+            }
         }
-    }
     const deleteCategory = async (id: string) => {
         const confirmDelete = window.confirm("Rostdan ham o‘chirmoqchimisiz?");
         if (!confirmDelete) return;
