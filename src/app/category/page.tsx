@@ -34,7 +34,7 @@ export default function Page() {
     ]
 
     return (
-        <div className="relative w-full min-h-screen bg-gray-100 p-4">
+        <div className="relative w-full min-h-screen bg-gray-100 p-3">
             {/* Header */}
             <div className="w-full h-14 px-4 rounded-xl shadow-md flex items-center justify-between bg-white">
                 <h1 className="text-3xl font-semibold text-yellow-600 text-center">
