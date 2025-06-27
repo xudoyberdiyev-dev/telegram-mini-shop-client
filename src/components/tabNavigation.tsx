@@ -29,9 +29,9 @@ export default function TabNavigation() {
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
             <div className="flex">
-                <>
+                <div className={'flex'}>
                 {!isAdmin && (
-                    <div className={'flex'}>
+                    <>
                         <Link
                             href="/"
                             onClick={() => setActiveTab("home")}
@@ -57,9 +57,9 @@ export default function TabNavigation() {
                             </div>
                             <span className="text-xs font-medium">Savat</span>
                         </Link>
-                    </div>
+                    </>
                 )}
-                </>
+                </div>
 
                 {isAdmin && (
                     <>

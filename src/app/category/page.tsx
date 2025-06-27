@@ -27,6 +27,11 @@ export default function Page() {
             setImage(file);
         }
     };
+    const categories = [
+        { id: 1, name: 'Ichimliklar', image: '/images/example.jpg' },
+        { id: 2, name: 'Salqin ichimlik', image: '/images/example.jpg' },
+        { id: 3, name: 'Fast Food', image: '/images/example.jpg' },
+    ]
 
     return (
         <div className="relative w-full min-h-screen bg-gray-100 p-4">
@@ -98,28 +103,46 @@ export default function Page() {
             )}
 
             {/* Kategoriya kartasi */}
-            <div className="grid mt-5 grid-cols-2 gap-4">
-                <div className="bg-white rounded-xl shadow-md p-1 pb-1 flex flex-col items-center">
-                    <Image
-                        src="/images/example.jpg"
-                        alt="Kategoriya rasmi"
-                        width={500}
-                        height={200}
-                        className="w-full bg-red-300 h-32 object-cover rounded-lg"
-                    />
-                    <h2 className="text-lg font-semibold text-yellow-900 mt-1 text-center">
-                        salom
-                    </h2>
-                    <div className="flex flex-row items-center justify-between gap-1 mt-1 w-full">
-                        <button className="flex-1   py-2 text-sm font-semibold shadow-md text-yellow-900  rounded  transition">
-                            Tahrirlash
-                        </button>
-                        <button className="flex-1 py-2 text-sm font-semibold shadow-md text-yellow-900  rounded  transition">
-                            O‘chirish
-                        </button>
-                    </div>
-
-                </div>
+            <div className="mt-6 overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                    <thead>
+                    <tr className="bg-yellow-100 text-left text-gray-700 text-sm font-semibold">
+                        <th className="p-3 border-b">#</th>
+                        <th className="p-3 border-b">Rasm</th>
+                        <th className="p-3 border-b">Kategoriya nomi</th>
+                        <th className="p-3 border-b text-center">Amallar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {categories.map((cat, index) => (
+                        <tr key={cat.id} className="hover:bg-yellow-50 transition">
+                            <td className="p-3 border-b text-sm text-gray-800">{index + 1}</td>
+                            <td className="p-3 border-b">
+                                <div className="w-16 h-12 rounded overflow-hidden border">
+                                    <Image
+                                        src={cat.image}
+                                        alt="Kategoriya rasmi"
+                                        width={64}
+                                        height={48}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </td>
+                            <td className="p-3 border-b text-sm text-gray-900">{cat.name}</td>
+                            <td className="p-3 border-b">
+                                <div className="flex gap-2 justify-center">
+                                    <button className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition">
+                                        Tahrirlash
+                                    </button>
+                                    <button className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">
+                                        O‘chirish
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

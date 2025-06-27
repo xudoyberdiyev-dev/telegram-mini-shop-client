@@ -91,8 +91,7 @@ export default function Products() {
             )}
 
             {selectedProduct && (
-                <div
-                    className="w-full h-[80%] fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl px-6 pt-4 pb-6 z-50 animate-slide-up">
+                <div className="w-full h-[91%] fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl px-6 pt-4 pb-6 z-50 animate-slide-up overflow-y-auto">
                     <div className="flex justify-between items-center mb-4">
                         <p className="text-lg font-bold text-gray-800">{selectedProduct.name}</p>
                         <button
@@ -105,8 +104,7 @@ export default function Products() {
                     </div>
 
                     <div className="relative flex justify-center items-center mb-6">
-                        <div
-                            className="absolute  w-48 h-48 bg-gradient-to-tr from-yellow-100 to-pink-100 rounded-full blur-2xl opacity-30 -z-10"/>
+                        <div className="absolute w-48 h-48 bg-gradient-to-tr from-yellow-100 to-pink-100 rounded-full blur-2xl opacity-30 -z-10" />
                         <Image
                             src={selectedProduct.image}
                             alt={selectedProduct.name}
@@ -116,9 +114,12 @@ export default function Products() {
                         />
                     </div>
 
-                    <p className="text-center text-xl font-semibold text-gray-800 mb-6">{selectedProduct.name}</p>
+                    <p className="text-center text-xl font-semibold text-gray-800 mb-1">
+                        {selectedProduct.name}
+                    </p>
 
-                    <div className="flex justify-between items-center mb-6 bg-gray-50 rounded-xl px-4 py-3 shadow-sm">
+                    {/* Son va narx bloki */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mb-6 bg-gray-50 rounded-xl px-4 py-4 shadow-sm">
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => setCount(Math.max(1, count - 1))}
@@ -126,7 +127,15 @@ export default function Products() {
                             >
                                 −
                             </button>
-                            <span className="text-lg font-medium w-6 text-center">{count}</span>
+
+                            <input
+                                type="number"
+                                min={1}
+                                value={count}
+                                onChange={(e) => setCount(Math.max(1, parseInt(e.target.value) || 1))}
+                                className="w-14 text-center border border-gray-300 rounded px-1 py-1 text-md font-medium text-gray-800"
+                            />
+
                             <button
                                 onClick={() => setCount(count + 1)}
                                 className="bg-gray-200 w-9 h-9 rounded-full text-xl font-bold text-gray-800 hover:bg-gray-300"
@@ -135,21 +144,24 @@ export default function Products() {
                             </button>
                         </div>
 
-                        <span className="text-yellow-600 text-lg font-bold">{selectedProduct.price}</span>
+                        <span className="text-yellow-600 text-lg font-bold">
+        {selectedProduct.price * count} so‘m
+      </span>
                     </div>
 
+                    {/* Tavsif */}
                     <div className="mb-6">
                         <p className="text-md text-black font-semibold mb-1">Maxsulot haqida:</p>
                         <p className="text-sm text-gray-600 leading-relaxed">
-                            Bu maxsulot haqida qisqacha maʼlumot. Agar siz batafsil tavsif qo‘shmoqchi bo‘lsangiz, uni
-                            shu yerga yozing.
+                            Bu maxsulot haqida qisqacha maʼlumot. Agar siz batafsil tavsif qo‘shmoqchi bo‘lsangiz, uni shu yerga yozing.
                         </p>
                     </div>
 
                     <button
                         onClick={() => {
-                            handleAddToCart(selectedProduct);
+                            handleAddToCart({ ...selectedProduct, quantity: count });
                             setSelectedProduct(null);
+                            setCount(1);
                         }}
                         className="bg-yellow-600 hover:bg-yellow-700 text-white w-full py-3 rounded-full text-base font-semibold shadow-md transition"
                     >
@@ -157,6 +169,7 @@ export default function Products() {
                     </button>
                 </div>
             )}
+
 
 
         </div>
