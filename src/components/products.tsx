@@ -145,7 +145,7 @@ export default function Products() {
                         </div>
 
                         <span className="text-yellow-600 text-lg font-bold">
-        {selectedProduct.price * count} so‘m
+       {parseInt(selectedProduct.price.replace(/[^\d]/g, '')) * count} so‘m
       </span>
                     </div>
 
