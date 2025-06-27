@@ -1,150 +1,227 @@
 'use client'
-import Image from "next/image";
-import Pagination from "@/components/pagination";
-import {useState} from "react";
 
-export default function Page() {
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "@/connection/BaseUrl";
+import { APP_API } from "@/connection/AppApi";
+
+export default function ProductPage() {
     const [showForm, setShowForm] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [formData, setFormData] = useState({
+        name: '',
+        price: '',
+        description: '',
+        category: '',
+        image: null
+    });
+
+
+    const getProduct = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}${APP_API.product}`);
+            setProducts(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const getCategory = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}${APP_API.category}`);
+            setCategories(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, files } = e.target;
+        if (name === 'image') {
+            setFormData({ ...formData, image: files[0] });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
+    };
+
+    const saveProduct = async (e) => {
+        e.preventDefault();
+        try {
+            const data = new FormData();
+            data.append('name', formData.name);
+            data.append('price', formData.price);
+            data.append('description', formData.description);
+            data.append('category', formData.category);
+            data.append('file', formData.image); //
+
+            await axios.post(`${BASE_URL}${APP_API.product}`, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            getProduct();
+            setShowForm(false);
+            setFormData({
+                name: '',
+                price: '',
+                description: '',
+                category: '',
+                image: null
+            });
+        } catch (err) {
+            console.error("❌ Saqlashda xatolik:", err.response?.data || err.message);
+        }
+    };
+
+    useEffect(() => {
+        getProduct();
+        getCategory();
+    }, []);
+
 
     return (
         <div className="relative w-full min-h-screen bg-gray-100 p-3">
             {/* Header */}
             <div className="w-full h-14 px-4 rounded-xl shadow-md flex items-center justify-between bg-white">
-                <h1 className="text-3xl font-semibold text-yellow-600 text-center">
-                    Maxsulotlar
-                </h1>
-                <button onClick={()=>setShowForm(true)}
+                <h1 className="text-2xl font-semibold text-yellow-600">Mahsulotlar</h1>
+                <button
+                    onClick={() => setShowForm(true)}
                     className="bg-white border border-yellow-800 rounded px-3 py-2"
                 >
                     <p className="text-md text-yellow-700 font-semibold">Qo‘shish</p>
                 </button>
             </div>
+
+            {/* Jadval */}
             <div className="mt-6 mb-3 overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                     <thead>
                     <tr className="bg-yellow-100 text-left text-gray-700 text-sm font-semibold">
                         <th className="p-3 border-b">#</th>
                         <th className="p-3 border-b">Rasm</th>
-                        <th className="p-3 border-b">Mahsulot nomi</th>
+                        <th className="p-3 border-b">Nomi</th>
                         <th className="p-3 border-b">Kategoriya</th>
                         <th className="p-3 border-b text-center">Amallar</th>
                     </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            className="hover:bg-yellow-50 transition text-sm text-gray-800"
-                        >
-                            <td className="p-3 border-b">1</td>
+                    {products.map((product, index) => (
+                        <tr key={product._id} className="hover:bg-yellow-50 transition text-sm text-gray-800">
+                            <td className="p-3 border-b">{index + 1}</td>
                             <td className="p-3 border-b">
                                 <div className="w-16 h-12 rounded overflow-hidden border">
                                     <Image
-                                        src={''}
-                                        alt={''}
+                                        src={product.image}
+                                        alt={product.name}
                                         width={64}
                                         height={48}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
                             </td>
-                            <td className="p-3 border-b">sas</td>
-                            <td className="p-3 border-b">sas</td>
+                            <td className="p-3 border-b">{product.name}</td>
+                            <td className="p-3 border-b">{product.category?.name}</td>
                             <td className="p-3 border-b">
                                 <div className="flex gap-2 justify-center">
-                                    <button
-                                        className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition"
-                                    >
-                                        Tahrirlash
-                                    </button>
-                                    <button
-                                        className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition"
-                                    >
-                                        O‘chirish
-                                    </button>
+                                    <button className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition">Tahrirlash</button>
+                                    <button className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">O‘chirish</button>
                                 </div>
                             </td>
                         </tr>
+                    ))}
                     </tbody>
                 </table>
-                {showForm && (
-                    <div className="fixed inset-0 p-2 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-                            <h2 className="text-xl font-bold text-yellow-700 mb-4 text-center">
-                                Yangi kategoriya qo‘shish
-                            </h2>
+            </div>
 
-
-                            {/* Rasm input */}
-                            <div className="mb-2">
-                                <label className="block mb-1 font-medium text-sm text-gray-700">
-                                    Rasm yuklang
-                                </label>
+            {showForm && (
+                <div className="fixed inset-0 p-2 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
+                        <h2 className="text-xl font-bold text-yellow-700 mb-4 text-center">Yangi mahsulot qo‘shish</h2>
+                        <form onSubmit={saveProduct}>
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">Rasm yuklang</label>
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    name="image"
+                                    onChange={handleInputChange}
                                     className="w-full border border-gray-300 rounded-lg p-2"
                                 />
                             </div>
-                            <div className="mb-2">
-                                <label className="block mb-1 font-medium text-sm text-gray-700">
-                                    Kategoriya nomi
-                                </label>
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">Kategoriya</label>
                                 <select
-                                    className="w-full border border-gray-300 rounded-lg p-2 "
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 rounded-lg p-2"
+                                >
+                                    <option value="">Tanlang</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat._id} value={cat._id}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">Mahsulot nomi</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 rounded-lg p-2"
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">Narxi</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    value={formData.price}
+                                    onChange={handleInputChange}
+                                    inputMode="numeric"
+                                    onKeyDown={(e) => {
+                                        if (
+                                            ['e', 'E', '+', '-', '.'].includes(e.key)
+                                        ) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    className="w-full border border-gray-300 rounded-lg p-2"
                                 />
                             </div>
 
-                            {/* Nomi input */}
-                            <div className="mb-3">
-                                <label className="block mb-1 font-medium text-sm text-gray-700">
-                                    Kategoriya nomi
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="Masalan: Ichimliklar"
-                                    className="w-full border border-gray-300 rounded-lg p-2"
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label className="block mb-1 font-medium text-sm text-gray-700">
-                                    Kategoriya nomi
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="Masalan: Ichimliklar"
-                                    className="w-full border border-gray-300 rounded-lg p-2"
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label className="block mb-1 font-medium text-sm text-gray-700">
-                                    Kategoriya nomi
-                                </label>
+                            <div className="mb-4">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">Tavsifi</label>
                                 <textarea
-                                    placeholder="Masalan: Ichimliklar"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
                                     className="w-full border border-gray-300 rounded-lg p-2"
                                 />
                             </div>
-
-                            {/* Tugmalar */}
                             <div className="flex justify-end gap-3">
                                 <button
+                                    type="button"
                                     onClick={() => setShowForm(false)}
                                     className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
                                 >
                                     Bekor qilish
                                 </button>
                                 <button
+                                    type="submit"
                                     className="px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-600"
                                 >
                                     Saqlash
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                )}
-            </div>
-            <div>
-                <Pagination/>
-            </div>
+                </div>
+            )}
         </div>
-    )
+    );
 }

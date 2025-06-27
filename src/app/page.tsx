@@ -5,7 +5,7 @@ import Navbar from "@/components/navbar";
 
 export default function Page() {
     return (
-        <div className={'bg-[#FAFAF5]'}>
+        <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <>
                 <Navbar/>
                 <Search/>

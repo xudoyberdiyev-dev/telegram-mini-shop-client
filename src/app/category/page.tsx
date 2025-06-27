@@ -21,7 +21,7 @@ export default function Page() {
     const [editId, setEditId] = useState<string | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-    const getCategory = async () => {
+   const getCategory = async () => {
         try {
             const res = await axios.get(`${BASE_URL}${APP_API.category}`);
             setCategories(res.data);
