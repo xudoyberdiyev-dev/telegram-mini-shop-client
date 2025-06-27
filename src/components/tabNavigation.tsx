@@ -29,7 +29,7 @@ export default function TabNavigation() {
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
             <div className="flex">
-                <div className={'flex'}>
+                <div className={'flex items-center justify-between w-[100%]'}>
                 {!isAdmin && (
                     <>
                         <Link
