@@ -1,7 +1,11 @@
+'use client'
 import Image from "next/image";
 import Pagination from "@/components/pagination";
+import {useState} from "react";
 
 export default function Page() {
+    const [showForm, setShowForm] = useState(false);
+
     return (
         <div className="relative w-full min-h-screen bg-gray-100 p-3">
             {/* Header */}
@@ -9,7 +13,7 @@ export default function Page() {
                 <h1 className="text-3xl font-semibold text-yellow-600 text-center">
                     Maxsulotlar
                 </h1>
-                <button
+                <button onClick={()=>setShowForm(true)}
                     className="bg-white border border-yellow-800 rounded px-3 py-2"
                 >
                     <p className="text-md text-yellow-700 font-semibold">Qo‘shish</p>
@@ -61,6 +65,82 @@ export default function Page() {
                         </tr>
                     </tbody>
                 </table>
+                {showForm && (
+                    <div className="fixed inset-0 p-2 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+                        <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
+                            <h2 className="text-xl font-bold text-yellow-700 mb-4 text-center">
+                                Yangi kategoriya qo‘shish
+                            </h2>
+
+
+                            {/* Rasm input */}
+                            <div className="mb-2">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">
+                                    Rasm yuklang
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="w-full border border-gray-300 rounded-lg p-2"
+                                />
+                            </div>
+                            <div className="mb-2">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">
+                                    Kategoriya nomi
+                                </label>
+                                <select
+                                    className="w-full border border-gray-300 rounded-lg p-2 "
+                                />
+                            </div>
+
+                            {/* Nomi input */}
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">
+                                    Kategoriya nomi
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Masalan: Ichimliklar"
+                                    className="w-full border border-gray-300 rounded-lg p-2"
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">
+                                    Kategoriya nomi
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Masalan: Ichimliklar"
+                                    className="w-full border border-gray-300 rounded-lg p-2"
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="block mb-1 font-medium text-sm text-gray-700">
+                                    Kategoriya nomi
+                                </label>
+                                <textarea
+                                    placeholder="Masalan: Ichimliklar"
+                                    className="w-full border border-gray-300 rounded-lg p-2"
+                                />
+                            </div>
+
+                            {/* Tugmalar */}
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    onClick={() => setShowForm(false)}
+                                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                                >
+                                    Bekor qilish
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-600"
+                                >
+                                    Saqlash
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
             <div>
                 <Pagination/>
