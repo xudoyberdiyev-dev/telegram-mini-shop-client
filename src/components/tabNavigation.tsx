@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import {useEffect, useState} from "react"
 import Link from "next/link"
-import { FaHome, FaShoppingBasket } from "react-icons/fa"
+import {FaHome, FaShoppingBasket} from "react-icons/fa"
+import {TbCategoryPlus} from "react-icons/tb";
 
 export default function TabNavigation() {
     const [activeTab, setActiveTab] = useState("home")
@@ -33,7 +34,7 @@ export default function TabNavigation() {
                     onClick={() => setActiveTab("home")}
                     className={`flex-1 py-3 flex flex-col items-center justify-center ${activeTab === "home" ? "text-yellow-500" : "text-gray-500"}`}
                 >
-                    <FaHome className="text-xl mb-1" />
+                    <FaHome className="text-xl mb-1"/>
                     <span className="text-xs font-medium">Mahsulotlar</span>
                 </Link>
 
@@ -44,9 +45,10 @@ export default function TabNavigation() {
                     className={`flex-1 py-3 flex flex-col items-center justify-center ${activeTab === "cart" ? "text-yellow-500" : "text-gray-500"}`}
                 >
                     <div className="relative">
-                        <FaShoppingBasket className="text-xl mb-1" />
+                        <FaShoppingBasket className="text-xl mb-1"/>
                         {cartItemsCount > 0 && (
-                            <span className="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            <span
+                                className="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {cartItemsCount}
               </span>
                         )}
@@ -55,32 +57,33 @@ export default function TabNavigation() {
                 </Link>
 
                 {/* Admin panel uchun */}
-                {isAdmin && (
-                    <>
-                        <Link
-                            href="/category"
-                            className="flex-1 py-3 flex flex-col items-center justify-center text-yellow-500"
-                        >
-                            📁
-                            <span className="text-xs font-medium">Kategoriya</span>
-                        </Link>
-                        <Link
-                            href="/product"
-                            className="flex-1 py-3 flex flex-col items-center justify-center text-yellow-500"
-                        >
-                            📦
-                            <span className="text-xs font-medium">Mahsulotlar</span>
-                        </Link>
-                        <Link
-                            href="/orders"
-                            className="flex-1 py-3 flex flex-col items-center justify-center text-yellow-500"
-                        >
-                            📋
-                            <span className="text-xs font-medium">Buyurtmalar</span>
-                        </Link>
-                    </>
-                )}
+
             </div>
+            {isAdmin && (
+                <>
+                    <Link
+                        href="/category"
+                        className="flex-1 py-3 flex flex-col items-center justify-center text-yellow-500"
+                    >
+                        <TbCategoryPlus/>
+                        <span className="text-xs font-medium">Kategoriya</span>
+                    </Link>
+                    <Link
+                        href="/product"
+                        className="flex-1 py-3 flex flex-col items-center justify-center text-yellow-500"
+                    >
+                        📦
+                        <span className="text-xs font-medium">Mahsulotlar</span>
+                    </Link>
+                    <Link
+                        href="/orders"
+                        className="flex-1 py-3 flex flex-col items-center justify-center text-yellow-500"
+                    >
+                        📋
+                        <span className="text-xs font-medium">Buyurtmalar</span>
+                    </Link>
+                </>
+            )}
         </div>
     )
 }
