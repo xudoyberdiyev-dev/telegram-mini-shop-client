@@ -7,6 +7,7 @@ import {TbCategoryPlus} from "react-icons/tb";
 
 export default function TabNavigation() {
     const [activeTab, setActiveTab] = useState("home")
+    const [active,setActive]=useState("category")
     const [chatId, setChatId] = useState("")
     const [cartItemsCount] = useState(3)
 
@@ -30,7 +31,7 @@ export default function TabNavigation() {
             <div className="flex">
                 <>
                 {!isAdmin && (
-                    <div>
+                    <div className={'flex'}>
                         <Link
                             href="/"
                             onClick={() => setActiveTab("home")}
@@ -64,24 +65,24 @@ export default function TabNavigation() {
                     <>
                         <Link
                             href="/category"
-                            onClick={() => setActiveTab("category")}
-                            className={`flex-1 py-3 flex flex-col items-center justify-center ${activeTab === "category" ? "text-yellow-500" : "text-gray-500"}`}
+                            onClick={() => setActive("category")}
+                            className={`flex-1 py-3 flex flex-col items-center justify-center ${active === "category" ? "text-yellow-500" : "text-gray-500"}`}
                         >
                             <TbCategoryPlus className="text-xl mb-1"/>
                             <span className="text-xs font-medium">Mahsulotlar</span>
                         </Link>
                         <Link
                             href="/product"
-                            onClick={() => setActiveTab("product")}
-                            className={`flex-1 py-3 flex flex-col items-center justify-center ${activeTab === "product" ? "text-yellow-500" : "text-gray-500"}`}
+                            onClick={() => setActive("product")}
+                            className={`flex-1 py-3 flex flex-col items-center justify-center ${active === "product" ? "text-yellow-500" : "text-gray-500"}`}
                         >
                             <FaHome className="text-xl mb-1"/>
                             <span className="text-xs font-medium">Mahsulotlar</span>
                         </Link>
                         <Link
                             href="/orders"
-                            onClick={() => setActiveTab("orders")}
-                            className={`flex-1 py-3 flex flex-col items-center justify-center ${activeTab === "orders" ? "text-yellow-500" : "text-gray-500"}`}
+                            onClick={() => setActive("orders")}
+                            className={`flex-1 py-3 flex flex-col items-center justify-center ${active === "orders" ? "text-yellow-500" : "text-gray-500"}`}
                         >
                             <FaHome className="text-xl mb-1"/>
                             <span className="text-xs font-medium">Mahsulotlar</span>
