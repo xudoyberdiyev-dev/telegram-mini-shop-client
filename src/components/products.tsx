@@ -42,8 +42,8 @@ export default function Products() {
 
 
     return (
-        <div className="p-4">
-            <div className="grid grid-cols-2 gap-6">
+        <div className="px-3">
+            <div className="grid grid-cols-2 gap-3">
                 {allProducts.slice(0, visibleCount).map((product) => (
                     <div
                         key={product.id}
