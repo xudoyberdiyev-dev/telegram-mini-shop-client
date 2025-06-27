@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from "next/image";
 
 export default function Page() {
     const [showForm, setShowForm] = useState(false)
@@ -14,7 +15,7 @@ export default function Page() {
         }
 
         // TODO: APIga yuborish joyi
-        alert(`Kategoriya: ${name}, Rasm: ${image.name}`)
+        alert(`Kategoriya: ${name}, Rasm: ${image}`)
         setName('')
         setImage(null)
         setShowForm(false)
@@ -25,7 +26,7 @@ export default function Page() {
             {/* Header */}
             <div className="w-full h-14 px-4 rounded-xl shadow-md flex items-center justify-between bg-white">
                 <h1 className="text-3xl font-semibold text-yellow-600 text-center">
-                    Bo'limlar
+                    Bulimlar
                 </h1>
                 <button
                     onClick={() => setShowForm(true)}
@@ -93,7 +94,11 @@ export default function Page() {
             <div className="grid mt-5 grid-cols-2 gap-4">
                 <div className="bg-white rounded-xl shadow-md p-1 pb-1 flex flex-col items-center">
                     {/* Rasm */}
-                    <img
+                    <Image
+                        src="/images/example.jpg" // Rasm manzilingizni shu yerga yozing
+                        alt="Kategoriya rasmi"
+                        width={500} // haqiqiy rasm o‘lchamiga moslab o‘zgartiring
+                        height={200}
                         className="w-full bg-red-300 h-32 object-cover rounded-lg"
                     />
 
