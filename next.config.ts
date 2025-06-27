@@ -1,9 +1,14 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     images: {
-        domains: ['as2.ftcdn.net'], // ← ruxsat berilgan host
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+            },
+        ],
     },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
