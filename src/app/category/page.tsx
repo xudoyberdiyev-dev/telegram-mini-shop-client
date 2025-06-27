@@ -64,6 +64,7 @@ export default function Page() {
                 alert("Noma’lum xatolik yuz berdi");
             }
         }
+    }
     const deleteCategory = async (id: string) => {
         const confirmDelete = window.confirm("Rostdan ham o‘chirmoqchimisiz?");
         if (!confirmDelete) return;
