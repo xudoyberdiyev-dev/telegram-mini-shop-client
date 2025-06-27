@@ -9,6 +9,7 @@ type Product = {
     name: string;
     price: string;
     image: string;
+    quantity?:number
 };
 
 const allProducts: Product[] = [
@@ -33,7 +34,7 @@ export default function Products() {
     const [cart, setCart] = useState<Product[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    const handleAddToCart = (product: { quantity: number }) => {
+    const handleAddToCart = (product: Product) => {
         setCart([...cart, product]);
     };
     useEffect(() => {
