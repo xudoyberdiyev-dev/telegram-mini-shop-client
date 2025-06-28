@@ -10,12 +10,18 @@ export default function ProductPage() {
     const [showForm, setShowForm] = useState(false);
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        name: string;
+        price: string;
+        description: string;
+        category: string;
+        image: File | null;
+    }>({
         name: '',
         price: '',
         description: '',
         category: '',
-        image: File | null
+        image: null, // bu yerda qiymat beriladi, yuqorida esa tip berilgan
     });
 
 
