@@ -37,14 +37,18 @@ export default function ProductPage() {
         }
     };
 
-    const handleInputChange = (e) => {
-        const { name, value, files } = e.target;
-        if (name === 'image') {
+
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value, files } = e.target as HTMLInputElement;
+        if (name === 'image' && files) {
             setFormData({ ...formData, image: files[0] });
         } else {
             setFormData({ ...formData, [name]: value });
         }
     };
+
 
     const saveProduct = async (e) => {
         e.preventDefault();
