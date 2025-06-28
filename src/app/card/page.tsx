@@ -31,6 +31,9 @@ export default function BasketPage() {
     const userId = '685ee0acf08ef18a957452b1';
     const [items, setItems] = useState<BasketItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [phone, setPhone] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showInput, setShowInput] = useState(false);
     const { setCartCount } = useCartStore();
 
     const fetchBasket = async () => {
@@ -41,19 +44,6 @@ export default function BasketPage() {
             setCartCount(response.data.products.length);
         } catch {
             alert('Savatni olishda xatolik yuz berdi');
-        }
-    };
-
-    const changeCount = async (productId: string, amount: number) => {
-        try {
-            await axios.post(`${BASE_URL}${APP_API.basket}/add`, {
-                user_id: userId,
-                product_id: productId,
-                count: amount,
-            });
-            fetchBasket();
-        } catch {
-            alert('Mahsulot sonini yangilashda xatolik');
         }
     };
 
@@ -78,6 +68,30 @@ export default function BasketPage() {
         }
     };
 
+    const makeOrder = async () => {
+        if (!phone.trim()) {
+            alert('Telefon raqamni kiriting');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const res = await axios.post(`${BASE_URL}/order/makeOrder`, {
+                user_id: userId,
+                phone: phone,
+            });
+
+            alert(res.data.msg || "Buyurtma qabul qilindi");
+            setPhone('');
+            fetchBasket(); // savatni yangilash (bo‘shatish)
+        } catch (err: any) {
+            const msg = err.response?.data?.msg || 'Buyurtma berishda xatolik yuz berdi';
+            alert(msg);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (userId) fetchBasket();
     }, [userId]);
@@ -93,7 +107,7 @@ export default function BasketPage() {
                         {items.map((item) => (
                             <div
                                 key={item._id}
-                                className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-md shadow-slate-300 rounded-xl max-w-md mx-auto mb-3"
+                                className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3"
                             >
                                 <Image
                                     src={item.product.image}
@@ -123,7 +137,7 @@ export default function BasketPage() {
                                                 pattern="[0-9]*"
                                                 value={item.count}
                                                 onChange={(e) => {
-                                                    const value = e.target.value.replace(/\D/g, ''); // faqat raqam
+                                                    const value = e.target.value.replace(/\D/g, '');
                                                     const parsed = parseInt(value);
                                                     if (!isNaN(parsed) && parsed >= 1) {
                                                         handleCountChange(item._id, parsed);
@@ -132,7 +146,6 @@ export default function BasketPage() {
                                                 className="w-12 text-center text-sm border-x border-gray-200 outline-none"
                                             />
 
-
                                             <button
                                                 onClick={() => handleCountChange(item._id, item.count + 1)}
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200"
@@ -140,8 +153,6 @@ export default function BasketPage() {
                                                 +
                                             </button>
                                         </div>
-
-
 
                                         <button
                                             onClick={() => handleDelete(item._id)}
@@ -154,27 +165,64 @@ export default function BasketPage() {
                             </div>
                         ))}
 
-                        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md p-4">
-                            <div className="flex justify-between items-center mb-3">
-                                <span className="text-gray-700 font-medium">Umumiy narx:</span>
-                                <span className="text-yellow-600 font-bold">{totalPrice} so‘m</span>
-                            </div>
-                           <div className={'h-[13vh]'}>
-                               <button className="bg-yellow-600 hover:bg-yellow-700 text-white w-full py-3 rounded-lg font-semibold transition">
-                                   Buyurtma berish
-                               </button>
-                           </div>
+                        <div className="fixed m-3 rounded-xl left-0 right-0 bg-white border-t border-gray-200 shadow-md p-4">
+                            {!showInput ? (
+                                <div className={''}>
+                                    <button
+                                        onClick={() => setShowInput(true)}
+                                        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 px-6 rounded-lg"
+                                    >
+                                        Buyurtma qilish
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <label >Telifon raqam</label>
+                                    <input
+                                        type="tel"
+                                        placeholder="Masalan: 998872212 "
+                                        value={phone}
+                                        onChange={(e) => {
+                                            const onlyNums = e.target.value.replace(/\D/g, ''); // Faqat raqamlar
+                                            if (onlyNums.length <= 9) {
+                                                setPhone(onlyNums);
+                                            }
+                                        }}
+                                        maxLength={9}
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        className="w-full border border-yellow-500 px-4 py-2 rounded-lg mb-3"
+                                    />
+
+
+                                    <div className="flex justify-between items-center gap-2">
+        <span className="text-gray-700 font-medium whitespace-nowrap">
+          Umumiy narx:
+          <span className="text-yellow-600 font-bold ml-2">{totalPrice} so‘m</span>
+        </span>
+
+                                        <button
+                                            onClick={makeOrder}
+                                            disabled={loading}
+                                            className={`flex-1 py-3 rounded-lg text-white font-semibold transition text-center ${
+                                                loading ? 'bg-gray-400' : 'bg-yellow-600 hover:bg-yellow-700'
+                                            }`}
+                                        >
+                                            {loading ? 'Yuborilmoqda...' : 'Rasmiylashtirish'}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                         </div>
+
                     </>
                 ) : (
                     <div className="flex items-center justify-center min-h-[70vh]">
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">Savatingiz bo‘sh</h2>
-                            <p className="text-gray-600 text-sm mb-4">Savatingizni maxsulotlar bilan to'ldiring</p>
+                            <p className="text-gray-600 text-sm mb-4">Savatingizni mahsulotlar bilan to‘ldiring</p>
                             <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
-                               < Link href={'/'}>
-                                   Xarid qilish
-                               </Link>
+                                <Link href="/">Xarid qilish</Link>
                             </button>
                         </div>
                     </div>

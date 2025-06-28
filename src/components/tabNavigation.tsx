@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import {JSX, useEffect, useState} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaHome, FaShoppingBasket } from "react-icons/fa";
+import { FaHome, FaShoppingBasket} from "react-icons/fa";
 import { TbCategoryPlus } from "react-icons/tb";
+import { MdProductionQuantityLimits } from "react-icons/md";
+import { FaClipboardList } from "react-icons/fa";
+
 import axios from "axios";
 import { BASE_URL } from "@/connection/BaseUrl";
 import { APP_API } from "@/connection/AppApi";
@@ -58,7 +61,7 @@ export function TabNavigation() {
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
             <div className="flex w-full">
-                {!isAdmin ? (
+                {isAdmin ? (
                     <>
                         {navLink("/", <FaHome className="text-xl mb-1" />, "Mahsulotlar")}
 
@@ -82,8 +85,8 @@ export function TabNavigation() {
                 ) : (
                     <>
                         {navLink("/category", <TbCategoryPlus className="text-xl mb-1" />, "Kategoriya")}
-                        {navLink("/product", <FaHome className="text-xl mb-1" />, "Mahsulotlar")}
-                        {navLink("/orders", <FaHome className="text-xl mb-1" />, "Buyurtmalar")}
+                        {navLink("/product", <MdProductionQuantityLimits className="text-xl mb-1" />, "Mahsulotlar")}
+                        {navLink("/orders", <FaClipboardList  className="text-xl mb-1" />, "Buyurtmalar")}
                     </>
                 )}
             </div>

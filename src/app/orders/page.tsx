@@ -1,5 +1,120 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+interface Product {
+    _id: string;
+    name: string;
+    price: number;
+}
+
+interface User {
+    _id: string;
+    name: string;
+    phone: string;
+}
+
+interface Order {
+    _id: string;
+    user_id: User;
+    products: {
+        product_id: Product;
+        count: number;
+    }[];
+    total_price: number;
+    phone: string;
+    createdAt: string;
+}
+
+interface ResponseType {
+    currentPage: number;
+    totalPages: number;
+    totalOrders: number;
+    orders: Order[];
+}
+
 export default function Page() {
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
+
+    const fetchOrders = async (page: number = 1) => {
+        setLoading(true);
+        try {
+            const res = await axios.get<ResponseType>(`http://localhost:5000/api/v1/order/getAllOrders?page=${page}&limit=5`);
+            setOrders(res.data.orders);
+            setCurrentPage(res.data.currentPage);
+            setTotalPages(res.data.totalPages);
+        } catch (err) {
+            alert('Buyurtmalarni yuklashda xatolik yuz berdi');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchOrders(currentPage);
+    }, [currentPage]);
+
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
+
     return (
-        <div>order</div>
-    )
+        <div className="max-w-5xl mx-auto p-4">
+            <div className="w-full h-11 mb-3 px-4 rounded-xl shadow-md bg-white">
+                <h1 className="text-3xl font-semibold text-yellow-600 text-center">Buyurtmalar</h1>
+            </div>
+
+            {loading ? (
+                <p>Yuklanmoqda...</p>
+            ) : (
+                <>
+                    {orders.map((order) => (
+                        <div key={order._id} className="border p-4 rounded-lg mb-4 shadow-sm bg-white">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <p className="text-gray-700"><strong>Foydalanuvchi:</strong> {order.user_id?.name || 'Nomaʼlum'}</p>
+                                    <p className="text-gray-700"><strong>Telefon:</strong> {order.phone}</p>
+                                </div>
+                                <span className="text-yellow-600 font-semibold">{order.total_price} so‘m</span>
+                            </div>
+                            <div>
+                                {order.products.map((item, i) => (
+                                    <div key={i} className="text-sm text-gray-600">
+                                        {item.product_id.name} × {item.count} = {item.product_id.price * item.count} so‘m
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-xs text-gray-400 mt-2">📅 {new Date(order.createdAt).toLocaleString()}</p>
+                        </div>
+                    ))}
+
+                    <div className="flex justify-center gap-2 mt-6">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+                        >
+                            ⬅️ Oldingi
+                        </button>
+                        <span className="px-4 py-2 border rounded">
+                            {currentPage} / {totalPages}
+                        </span>
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
+                        >
+                            Keyingi ➡️
+                        </button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
 }
