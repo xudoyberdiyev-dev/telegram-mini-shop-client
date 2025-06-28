@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import {FaShoppingBasket} from 'react-icons/fa';
@@ -37,13 +37,15 @@ export default function Products({query, categoryId}: Props) {
         try {
             const response = await axios.get(`${BASE_URL}${APP_API.product}/${id}`);
             setSelectedProduct(response.data);
-        } catch (err: any) {
-            const msg = err?.response?.data?.msg || 'Mahsulotni olishda xatolik yuz berdi';
+        } catch (err: unknown) {
+            const error = err as { response?: { data?: { msg?: string } } };
+            const msg = error.response?.data?.msg || 'Mahsulotni olishda xatolik yuz berdi';
             alert(msg);
         }
+
     };
 
-    const fetchProducts = async () => {
+    const fetchProducts =useCallback(async () => {
         try {
             let response;
             if (query) {
@@ -62,7 +64,7 @@ export default function Products({query, categoryId}: Props) {
                 alert('Nomaʼlum xatolik yuz berdi');
             }
         }
-    };
+    },[])
 
     useEffect(() => {
         const delay = setTimeout(() => {
