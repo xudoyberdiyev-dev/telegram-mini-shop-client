@@ -6,12 +6,20 @@ import axios from "axios";
 import {BASE_URL} from "@/connection/BaseUrl";
 import {APP_API} from "@/connection/AppApi";
 
+interface Product {
+    _id: string;
+    name: string;
+    price: number;
+    image: string;
+    category?: string;
+    description?: string;
+}
+
 export default function ProductPage() {
     const [showForm, setShowForm] = useState(false);
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState<{
-        _id:string
         name: string;
         price: string;
         description: string;

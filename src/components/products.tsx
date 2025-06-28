@@ -71,7 +71,7 @@ export default function Products({query, categoryId}: Props) {
             fetchProducts();
         }, 300);
         return () => clearTimeout(delay);
-    }, [query, categoryId]);
+    }, [query, categoryId,fetchProducts]);
 
     const displayProducts = products.slice(0, visibleCount);
 
