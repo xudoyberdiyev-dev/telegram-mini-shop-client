@@ -92,8 +92,12 @@ export default function ProductPage() {
                 category: '',
                 image: null
             });
-        } catch (err:any) {
-            console.error("❌ Saqlashda xatolik:", err.response?.data || err.message);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                console.error("Xatolik:", err.response?.data || err.message);
+            } else {
+                console.error("Noma’lum xatolik:", err);
+            }
         }
     };
 
