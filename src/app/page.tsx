@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
-
+    const userId ='685ee0acf08ef18a957452b1'
     return (
         <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <>
@@ -18,8 +18,7 @@ export default function Page() {
                     setCategoryId(id);
                     setSearchQuery('');
                 }}/>
-                <Products query={searchQuery} categoryId={categoryId} />
-
+                <Products query={searchQuery} categoryId={categoryId}  userId={userId} />
             </>
         </div>
     )

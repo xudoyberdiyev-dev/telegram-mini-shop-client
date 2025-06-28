@@ -2,7 +2,7 @@
 import './globals.css';
 
 import { useEffect, useState } from 'react';
-import TabNavigation from "@/components/tabNavigation";
+import {TabNavigation} from "@/components/tabNavigation";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const [isMobile, setIsMobile] = useState(true);
