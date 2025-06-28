@@ -11,6 +11,7 @@ export default function ProductPage() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState<{
+        _id:string
         name: string;
         price: string;
         description: string;
