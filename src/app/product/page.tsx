@@ -49,20 +49,19 @@ export default function ProductPage() {
         const target = e.target;
         const { name, value } = target;
 
-        // Fayl tanlash
         if (target instanceof HTMLInputElement && target.type === 'file' && target.files) {
             setFormData({
                 ...formData,
                 [name]: target.files[0]
             });
         } else {
-            // Text, Textarea, Select uchun
             setFormData({
                 ...formData,
                 [name]: value
             });
         }
     };
+
 
 
 
