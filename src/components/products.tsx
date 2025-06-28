@@ -14,7 +14,7 @@ type Product = {
     image: string;
     quantity?: number;
     description?: string;
-    category: Category;
+    category?: { name: string };
 };
 
 interface Props {

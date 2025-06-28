@@ -1,24 +1,29 @@
-'use client'
+'use client';
 
 import Image from "next/image";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import {BASE_URL} from "@/connection/BaseUrl";
-import {APP_API} from "@/connection/AppApi";
+import { BASE_URL } from "@/connection/BaseUrl";
+import { APP_API } from "@/connection/AppApi";
+
+interface Category {
+    _id: string;
+    name: string;
+}
 
 interface Product {
     _id: string;
     name: string;
     price: number;
     image: string;
-    category?: string;
+    category?: Category;
     description?: string;
 }
 
 export default function ProductPage() {
     const [showForm, setShowForm] = useState(false);
     const [products, setProducts] = useState<Product[]>([]);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [formData, setFormData] = useState<{
         name: string;
         price: string;
@@ -30,9 +35,8 @@ export default function ProductPage() {
         price: '',
         description: '',
         category: '',
-        image: null, // bu yerda qiymat beriladi, yuqorida esa tip berilgan
+        image: null,
     });
-
 
     const getProduct = async () => {
         try {
@@ -71,9 +75,6 @@ export default function ProductPage() {
         }
     };
 
-
-
-
     const saveProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -87,9 +88,7 @@ export default function ProductPage() {
             }
 
             await axios.post(`${BASE_URL}${APP_API.product}`, data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             getProduct();
@@ -105,7 +104,7 @@ export default function ProductPage() {
             if (axios.isAxiosError(err)) {
                 console.error("Xatolik:", err.response?.data || err.message);
             } else {
-                console.error("Noma’lum xatolik:", err);
+                console.error("Nomaʼlum xatolik:", err);
             }
         }
     };
@@ -115,10 +114,8 @@ export default function ProductPage() {
         getCategory();
     }, []);
 
-
     return (
         <div className="relative w-full min-h-screen bg-gray-100 p-3">
-            {/* Header */}
             <div className="w-full h-14 px-4 rounded-xl shadow-md flex items-center justify-between bg-white">
                 <h1 className="text-2xl font-semibold text-yellow-600">Mahsulotlar</h1>
                 <button
@@ -129,7 +126,6 @@ export default function ProductPage() {
                 </button>
             </div>
 
-            {/* Jadval */}
             <div className="mt-6 mb-3 overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                     <thead>
@@ -157,14 +153,14 @@ export default function ProductPage() {
                                 </div>
                             </td>
                             <td className="p-3 border-b">{product.name}</td>
-                            <td className="p-3 border-b">{product.category?.name}</td>
+                            <td className="p-3 border-b">{product.category?.name || '–'}</td>
                             <td className="p-3 border-b">
                                 <div className="flex gap-2 justify-center">
-                                    <button
-                                        className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition">Tahrirlash
+                                    <button className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition">
+                                        Tahrirlash
                                     </button>
-                                    <button
-                                        className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">O‘chirish
+                                    <button className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">
+                                        O‘chirish
                                     </button>
                                 </div>
                             </td>
@@ -222,16 +218,13 @@ export default function ProductPage() {
                                     onChange={handleInputChange}
                                     inputMode="numeric"
                                     onKeyDown={(e) => {
-                                        if (
-                                            ['e', 'E', '+', '-', '.'].includes(e.key)
-                                        ) {
+                                        if (['e', 'E', '+', '-', '.'].includes(e.key)) {
                                             e.preventDefault();
                                         }
                                     }}
                                     className="w-full border border-gray-300 rounded-lg p-2"
                                 />
                             </div>
-
                             <div className="mb-4">
                                 <label className="block mb-1 font-medium text-sm text-gray-700">Tavsifi</label>
                                 <textarea
