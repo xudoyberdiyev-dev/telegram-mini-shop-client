@@ -65,7 +65,7 @@ export default function ProductPage() {
 
 
 
-    const saveProduct = async (e) => {
+    const saveProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const data = new FormData();
