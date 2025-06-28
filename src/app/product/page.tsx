@@ -73,7 +73,9 @@ export default function ProductPage() {
             data.append('price', formData.price);
             data.append('description', formData.description);
             data.append('category', formData.category);
-            data.append('file', formData.image); //
+            if (formData.image) {
+                data.append('file', formData.image);
+            }
 
             await axios.post(`${BASE_URL}${APP_API.product}`, data, {
                 headers: {
@@ -90,7 +92,7 @@ export default function ProductPage() {
                 category: '',
                 image: null
             });
-        } catch (err) {
+        } catch (err:any) {
             console.error("❌ Saqlashda xatolik:", err.response?.data || err.message);
         }
     };
