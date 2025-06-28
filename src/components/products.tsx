@@ -55,9 +55,12 @@ export default function Products({query, categoryId}: Props) {
             }
 
             setProducts(response.data);
-        } catch (err: any) {
-            const msg = err?.response?.data?.message || 'Mahsulotlarni olishda xatolik yuz berdi';
-            alert(msg);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err) && err.response) {
+                alert(err.response.data?.message || 'Xatolik yuz berdi');
+            } else {
+                alert('Nomaʼlum xatolik yuz berdi');
+            }
         }
     };
 
