@@ -1,10 +1,10 @@
 'use client'
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import axios from "axios";
-import { BASE_URL } from "@/connection/BaseUrl";
-import { APP_API } from "@/connection/AppApi";
+import {BASE_URL} from "@/connection/BaseUrl";
+import {APP_API} from "@/connection/AppApi";
 
 export default function ProductPage() {
     const [showForm, setShowForm] = useState(false);
@@ -15,7 +15,7 @@ export default function ProductPage() {
         price: '',
         description: '',
         category: '',
-        image: null
+        image: File | null
     });
 
 
@@ -41,11 +41,11 @@ export default function ProductPage() {
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
-        const { name, value, files } = e.target as HTMLInputElement;
+        const {name, value, files} = e.target as HTMLInputElement;
         if (name === 'image' && files) {
-            setFormData({ ...formData, image: files[0] });
+            setFormData({...formData, image: files[0]});
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFormData({...formData, [name]: value});
         }
     };
 
@@ -130,8 +130,12 @@ export default function ProductPage() {
                             <td className="p-3 border-b">{product.category?.name}</td>
                             <td className="p-3 border-b">
                                 <div className="flex gap-2 justify-center">
-                                    <button className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition">Tahrirlash</button>
-                                    <button className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">O‘chirish</button>
+                                    <button
+                                        className="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition">Tahrirlash
+                                    </button>
+                                    <button
+                                        className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">O‘chirish
+                                    </button>
                                 </div>
                             </td>
                         </tr>
