@@ -43,17 +43,27 @@ export default function ProductPage() {
         }
     };
 
-
     const handleInputChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
-        const {name, value, files} = e.target as HTMLInputElement;
-        if (name === 'image' && files) {
-            setFormData({...formData, image: files[0]});
+        const target = e.target;
+        const { name, value } = target;
+
+        // Fayl tanlash
+        if (target instanceof HTMLInputElement && target.type === 'file' && target.files) {
+            setFormData({
+                ...formData,
+                [name]: target.files[0]
+            });
         } else {
-            setFormData({...formData, [name]: value});
+            // Text, Textarea, Select uchun
+            setFormData({
+                ...formData,
+                [name]: value
+            });
         }
     };
+
 
 
     const saveProduct = async (e) => {
