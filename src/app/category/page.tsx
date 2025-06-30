@@ -13,6 +13,7 @@ interface Category {
 }
 
 export default function Page() {
+    const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState<string>('');
@@ -25,6 +26,7 @@ export default function Page() {
         try {
             const res = await axios.get(`${BASE_URL}${APP_API.category}`);
             setCategories(res.data);
+            setLoading(true)
         } catch (err) {
             console.log(err);
         }
@@ -182,7 +184,7 @@ export default function Page() {
                                 onClick={saveCategory}
                                 className="px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-600"
                             >
-                                {editMode ? "Yangilash" : "Saqlash"}
+                                {loading ? 'Saqlanmoqda...' : 'Saqlash'}
                             </button>
                         </div>
                     </div>

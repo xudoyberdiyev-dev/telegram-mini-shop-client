@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import Image from 'next/image';
-import { FiTrash2 } from 'react-icons/fi';
+import {FiTrash2} from 'react-icons/fi';
 import Navbar from '@/components/navbar';
-import { BASE_URL } from '@/connection/BaseUrl';
-import { APP_API } from '@/connection/AppApi';
-import { useCartStore } from '@/utils/cartStore';
+import {BASE_URL} from '@/connection/BaseUrl';
+import {APP_API} from '@/connection/AppApi';
+import {useCartStore} from '@/utils/cartStore';
 import Link from "next/link";
 import toast from "react-hot-toast";
 
@@ -35,9 +35,9 @@ export default function BasketPage() {
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
     const [showInput, setShowInput] = useState(false);
-    const { setCartCount } = useCartStore();
+    const {setCartCount} = useCartStore();
 
-    const fetchBasket = async () => {
+    const fetchBasket = useCallback(async () => {
         try {
             const response = await axios.get<BasketResponse>(`${BASE_URL}${APP_API.basket}/${userId}`);
             setItems(response.data.products);
@@ -46,7 +46,7 @@ export default function BasketPage() {
         } catch {
             alert('Savatni olishda xatolik yuz berdi');
         }
-    };
+    }, [userId, setCartCount]);
 
     const handleCountChange = async (basketId: string, newCount: number) => {
         try {
@@ -62,7 +62,7 @@ export default function BasketPage() {
 
     const handleDelete = async (id: string) => {
         try {
-            await axios.post(`${BASE_URL}${APP_API.basket}/remove-multiple`, { basketIds: [id] });
+            await axios.post(`${BASE_URL}${APP_API.basket}/remove-multiple`, {basketIds: [id]});
             fetchBasket();
         } catch {
             alert('O‘chirishda xatolik');
@@ -84,12 +84,15 @@ export default function BasketPage() {
             alert(res.data.msg || "Buyurtma qabul qilindi");
             setPhone('');
             fetchBasket(); // savatni yangilash (bo‘shatish)
-        } catch (err: any) {
-            const msg = err.response?.data?.msg || 'Buyurtma berishda xatolik yuz berdi';
-            alert(msg);
-        } finally {
-            setLoading(false);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const msg = err.response?.data?.msg || 'Buyurtma berishda xatolik yuz berdi';
+                alert(msg);
+            } else {
+                alert('Nomaʼlum xatolik yuz berdi');
+            }
         }
+
     };
 
     useEffect(() => {
@@ -98,7 +101,7 @@ export default function BasketPage() {
 
     return (
         <>
-            <Navbar />
+            <Navbar/>
             <div className="mx-3 mt-4 mb-28">
                 {items.length > 0 ? (
                     <>
@@ -123,7 +126,8 @@ export default function BasketPage() {
                                     <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
 
                                     <div className="flex items-center justify-between mt-2">
-                                        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                        <div
+                                            className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                                             <button
                                                 onClick={() => handleCountChange(item._id, item.count - 1)}
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200"
@@ -158,14 +162,15 @@ export default function BasketPage() {
                                             onClick={() => handleDelete(item._id)}
                                             className="text-gray-400 hover:text-red-600"
                                         >
-                                            <FiTrash2 className="text-lg" />
+                                            <FiTrash2 className="text-lg"/>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         ))}
 
-                        <div className="fixed m-3 rounded-xl left-0 right-0 bg-white border-t border-gray-200 shadow-md p-4">
+                        <div
+                            className="fixed m-3 rounded-xl left-0 right-0 bg-white border-t border-gray-200 shadow-md p-4">
                             {!showInput ? (
                                 <div className={''}>
                                     <button
@@ -177,7 +182,7 @@ export default function BasketPage() {
                                 </div>
                             ) : (
                                 <>
-                                    <label >Telifon raqam</label>
+                                    <label>Telifon raqam</label>
                                     <input
                                         type="tel"
                                         placeholder="Masalan: 998872212 "
@@ -221,7 +226,8 @@ export default function BasketPage() {
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">Savatingiz bo‘sh</h2>
                             <p className="text-gray-600 text-sm mb-4">Savatingizni mahsulotlar bilan to‘ldiring</p>
-                            <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
+                            <button
+                                className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
                             </button>
                         </div>

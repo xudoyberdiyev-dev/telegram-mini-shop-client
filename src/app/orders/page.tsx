@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 
 interface Product {
@@ -47,11 +47,15 @@ export default function Page() {
             setOrders(res.data.orders);
             setCurrentPage(res.data.currentPage);
             setTotalPages(res.data.totalPages);
-        } catch (err) {
-            alert('Buyurtmalarni yuklashda xatolik yuz berdi');
-        } finally {
-            setLoading(false);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const msg = err.response?.data?.msg || 'Buyurtma berishda xatolik yuz berdi';
+                alert(msg);
+            } else {
+                alert('Nomaʼlum xatolik yuz berdi');
+            }
         }
+
     };
 
     useEffect(() => {
@@ -78,7 +82,8 @@ export default function Page() {
                         <div key={order._id} className="border p-4 rounded-lg mb-4 shadow-sm bg-white">
                             <div className="flex justify-between items-center mb-2">
                                 <div>
-                                    <p className="text-gray-700"><strong>Foydalanuvchi:</strong> {order.user_id?.name || 'Nomaʼlum'}</p>
+                                    <p className="text-gray-700">
+                                        <strong>Foydalanuvchi:</strong> {order.user_id?.name || 'Nomaʼlum'}</p>
                                     <p className="text-gray-700"><strong>Telefon:</strong> {order.phone}</p>
                                 </div>
                                 <span className="text-yellow-600 font-semibold">{order.total_price} so‘m</span>
