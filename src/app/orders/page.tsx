@@ -35,6 +35,7 @@ interface ResponseType {
 }
 
 export default function Page() {
+    const chatId ='1364069488'
     const [orders, setOrders] = useState<Order[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -43,7 +44,7 @@ export default function Page() {
     const fetchOrders = async (page: number = 1) => {
         setLoading(true);
         try {
-            const res = await axios.get<ResponseType>(`http://localhost:5000/api/v1/order/getAllOrders?page=${page}&limit=5`);
+            const res = await axios.get<ResponseType>(`http://localhost:5000/api/v1/order/getAllOrders?page=${page}&limit=5&chatId=${chatId}`);
             setOrders(res.data.orders);
             setCurrentPage(res.data.currentPage);
             setTotalPages(res.data.totalPages);

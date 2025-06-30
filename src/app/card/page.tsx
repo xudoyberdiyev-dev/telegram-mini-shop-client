@@ -96,32 +96,21 @@ export default function BasketPage() {
     };
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        const chatId = urlParams.get("chatId");
+        const userIdFromUrl = urlParams.get("userId");
 
-        if (chatId) {
-            localStorage.setItem("chatId", chatId);
-
-            // 👇 backenddan user._id ni olish
-            axios.get(`${BASE_URL}/user/by-chatId/${chatId}`)
-                .then(res => {
-                    setUserId(res.data._id); // Bu haqiqiy Mongo ID
-                })
-                .catch(() => {
-                    toast.error("Foydalanuvchi topilmadi");
-                });
+        if (userIdFromUrl) {
+            localStorage.setItem("userId", userIdFromUrl);
+            setUserId(userIdFromUrl);
         } else {
-            const stored = localStorage.getItem("chatId");
+            const stored = localStorage.getItem("userId");
             if (stored) {
-                axios.get(`${BASE_URL}/user/by-chatId/${stored}`)
-                    .then(res => {
-                        setUserId(res.data._id);
-                    })
-                    .catch(() => {
-                        toast.error("Foydalanuvchi topilmadi");
-                    });
+                setUserId(stored);
+            } else {
+                toast.error("Foydalanuvchi aniqlanmadi");
             }
         }
     }, []);
+
 
     useEffect(() => {
         if (userId) fetchBasket();
