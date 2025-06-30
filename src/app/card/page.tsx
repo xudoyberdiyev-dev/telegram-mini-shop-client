@@ -97,7 +97,7 @@ export default function BasketPage() {
 
     useEffect(() => {
         if (userId) fetchBasket();
-    }, [userId]);
+    }, [userId,fetchBasket]);
 
     return (
         <>
@@ -224,8 +224,8 @@ export default function BasketPage() {
                 ) : (
                     <div className="flex items-center justify-center min-h-[70vh]">
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-2">Savatingiz bo‘sh</h2>
-                            <p className="text-gray-600 text-sm mb-4">Savatingizni mahsulotlar bilan to‘ldiring</p>
+                            <h2 className="text-xl font-semibold text-gray-800 mb-2">{"Sizning savatingiz bo'sh"}</h2>
+                            <p className="text-gray-600 text-sm mb-4">{"Savatingizni mahsulotlar bilan to‘ldiring"}</p>
                             <button
                                 className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
