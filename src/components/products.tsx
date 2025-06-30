@@ -105,7 +105,7 @@ export default function Products({query, categoryId, userId}: Props) {
                         </div>
                         <h2 className="text-base font-semibold text-gray-800 mb-2 text-center">{product.name}</h2>
                         <div className="flex justify-between items-center w-full px-2 mt-auto">
-                            <span className="text-yellow-600 font-bold text-sm">{product.price} so'm</span>
+                            <span className="text-yellow-600 font-bold text-sm">{product.price} {"so'm"}</span>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -127,7 +127,7 @@ export default function Products({query, categoryId, userId}: Props) {
                             onClick={() => setVisibleCount(visibleCount + 6)}
                             className="bg-yellow-600 text-white px-6 py-3 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
                         >
-                            Yana ko‘rish
+                            {"Yana ko‘rish"}
                         </button>
                     </div>
                 )}
@@ -176,7 +176,7 @@ export default function Products({query, categoryId, userId}: Props) {
                             </button>
                         </div>
                         <span className="text-yellow-600 text-lg font-bold">
-              {selectedProduct.price * count} so‘m
+              {selectedProduct.price * count} {"so‘m"}
             </span>
                     </div>
 
@@ -191,7 +191,7 @@ export default function Products({query, categoryId, userId}: Props) {
                         onClick={() => handleAddToBasket(selectedProduct)}
                         className="bg-yellow-600 hover:bg-yellow-700 text-white w-full py-3 rounded-xl text-base font-semibold shadow-md transition"
                     >
-                        Savatga qo‘shish
+                        {"Savatga qo‘shish"}
                     </button>
                 </div>
             )}
