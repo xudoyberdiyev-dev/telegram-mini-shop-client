@@ -6,7 +6,8 @@ import Image from 'next/image';
 import {FaShoppingBasket} from 'react-icons/fa';
 import {BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
-import {useCartStore} from '@/utils/cartStore'; // ✅ Qo‘shildi
+import {useCartStore} from '@/utils/cartStore';
+import toast from "react-hot-toast"; // ✅ Qo‘shildi
 
 interface Product {
     _id: string;
@@ -47,7 +48,7 @@ export default function Products({query, categoryId, userId}: Props) {
             const res = await axios.get(`${BASE_URL}${APP_API.basket}/${userId}`);
             setCartCount(res.data.products.length);
 
-            alert('Mahsulot savatga qo‘shildi');
+            toast.success('Mahsulot savatga qo‘shildi');
             setSelectedProduct(null);
             setCount(1);
         } catch (err: any) {
@@ -89,47 +90,47 @@ export default function Products({query, categoryId, userId}: Props) {
 
     return (
         <div className="px-3">
-            <div className="grid grid-cols-2 gap-3 mt-6">
-                {displayProducts.map((product) => (
-                    <div
-                        key={product._id}
-                        onClick={() => handleProductClick(product._id)}
-                        className="cursor-pointer bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 p-4 flex flex-col items-center"
-                    >
+                <div className="grid grid-cols-2 gap-3 mt-6">
+                    {displayProducts.map((product) => (
                         <div
-                            className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center mb-4">
-                            <Image src={product.image} alt={product.name} width={80} height={80}
-                                   className="object-contain"/>
-                        </div>
-                        <h2 className="text-base font-semibold text-gray-800 mb-2 text-center">{product.name}</h2>
-                        <div className="flex justify-between items-center w-full px-2 mt-auto">
-                            <span className="text-yellow-600 font-bold text-sm">{product.price} so'm</span>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedProduct(product);
-                                }}
-                                className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-full transition"
-                            >
-                                <FaShoppingBasket/>
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <div className="w-full mt-6 h-[15vh] mb-6 flex justify-center">
-                {visibleCount < products.length && (
-                    <div>
-                        <button
-                            onClick={() => setVisibleCount(visibleCount + 6)}
-                            className="bg-yellow-600 text-white px-6 py-3 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
+                            key={product._id}
+                            onClick={() => handleProductClick(product._id)}
+                            className="cursor-pointer bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 p-4 flex flex-col items-center"
                         >
-                            Yana ko‘rish
-                        </button>
+                            <div
+                                className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center mb-4">
+                                <Image src={product.image} alt={product.name} width={80} height={80}
+                                       className="object-contain"/>
+                            </div>
+                            <h2 className="text-base font-semibold text-gray-800 mb-2 text-center">{product.name}</h2>
+                            <div className="flex justify-between items-center w-full px-2 mt-auto">
+                                <span className="text-yellow-600 font-bold text-sm">{product.price} so'm</span>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedProduct(product);
+                                    }}
+                                    className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-full transition"
+                                >
+                                    <FaShoppingBasket/>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                    <div className={'w-full mt-6 h-[15vh] mb-6 flex justify-center'}>
+                        {visibleCount < products.length && (
+                            <div className={''}>
+                                <button
+                                    onClick={() => setVisibleCount(visibleCount + 6)}
+                                    className="bg-yellow-600 text-white px-6 py-3 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
+                                >
+                                    Yana ko‘rish
+                                </button>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
 
             {selectedProduct && (
                 <div
@@ -158,12 +159,17 @@ export default function Products({query, categoryId, userId}: Props) {
                                     className="bg-gray-200 w-9 h-9 rounded-full text-xl font-bold text-gray-800 hover:bg-gray-300">−
                             </button>
                             <input
-                                type="number"
-                                min={1}
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 value={count}
-                                onChange={(e) => setCount(Math.max(1, parseInt(e.target.value) || 1))}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, ''); // 🔍 faqat raqamlarni qoldiramiz
+                                    setCount(Math.max(1, parseInt(val) || 1));
+                                }}
                                 className="w-14 text-center border border-gray-300 rounded px-1 py-1 text-md font-medium text-gray-800"
                             />
+
                             <button onClick={() => setCount(count + 1)}
                                     className="bg-gray-200 w-9 h-9 rounded-full text-xl font-bold text-gray-800 hover:bg-gray-300">+
                             </button>

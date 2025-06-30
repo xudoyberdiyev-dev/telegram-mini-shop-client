@@ -9,6 +9,7 @@ import { BASE_URL } from '@/connection/BaseUrl';
 import { APP_API } from '@/connection/AppApi';
 import { useCartStore } from '@/utils/cartStore';
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 interface BasketItem {
     _id: string;
@@ -70,7 +71,7 @@ export default function BasketPage() {
 
     const makeOrder = async () => {
         if (!phone.trim()) {
-            alert('Telefon raqamni kiriting');
+            toast.error('Telefon raqamni kiriting');
             return;
         }
 
@@ -80,7 +81,6 @@ export default function BasketPage() {
                 user_id: userId,
                 phone: phone,
             });
-
             alert(res.data.msg || "Buyurtma qabul qilindi");
             setPhone('');
             fetchBasket(); // savatni yangilash (bo‘shatish)
