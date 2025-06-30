@@ -29,7 +29,7 @@ interface BasketResponse {
 }
 
 export default function BasketPage() {
-    const userId = '685ee0acf08ef18a957452b1';
+    const [userId,setUserId]=useState('')
     const [items, setItems] = useState<BasketItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [phone, setPhone] = useState('');
@@ -94,6 +94,34 @@ export default function BasketPage() {
         }
 
     };
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const chatId = urlParams.get("chatId");
+
+        if (chatId) {
+            localStorage.setItem("chatId", chatId);
+
+            // 👇 backenddan user._id ni olish
+            axios.get(`${BASE_URL}/user/by-chatId/${chatId}`)
+                .then(res => {
+                    setUserId(res.data._id); // Bu haqiqiy Mongo ID
+                })
+                .catch(() => {
+                    toast.error("Foydalanuvchi topilmadi");
+                });
+        } else {
+            const stored = localStorage.getItem("chatId");
+            if (stored) {
+                axios.get(`${BASE_URL}/user/by-chatId/${stored}`)
+                    .then(res => {
+                        setUserId(res.data._id);
+                    })
+                    .catch(() => {
+                        toast.error("Foydalanuvchi topilmadi");
+                    });
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (userId) fetchBasket();
