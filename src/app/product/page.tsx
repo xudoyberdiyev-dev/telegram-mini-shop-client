@@ -160,7 +160,7 @@ export default function ProductPage() {
                     setEditingProductId(null);
                     setFormData({ name: '', price: '', description: '', category: '', image: null });
                 }} className="bg-white border border-yellow-800 rounded px-3 py-2">
-                    <p className="text-md text-yellow-700 font-semibold">Qo‘shish</p>
+                    <p className="text-md text-yellow-700 font-semibold">{"Qo‘shish"}</p>
                 </button>
             </div>
 
@@ -191,7 +191,7 @@ export default function ProductPage() {
                                 </div>
                             </td>
                             <td className="p-3 border-b">{product.name}</td>
-                            <td className="p-3 border-b">{product.category?.name || '–'}</td>
+                            <td className="p-3 border-b">{product.category?.name || "–"}</td>
                             <td className="p-3 border-b">
                                 <div className="flex gap-2 justify-center">
                                     <button
@@ -202,7 +202,7 @@ export default function ProductPage() {
                                     <button
                                         onClick={() => handleDelete(product._id)}
                                         className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">
-                                        O‘chirish
+                                        {"O‘chirish"}
                                     </button>
                                 </div>
                             </td>
