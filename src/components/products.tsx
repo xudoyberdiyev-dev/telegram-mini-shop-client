@@ -151,15 +151,18 @@ export default function Products({query, categoryId, userId}: Props) {
                         </button>
                     </div>
 
-                    <div className="w-[180px] h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
-                        <Image
-                            src={selectedProduct.image}
-                            alt={selectedProduct.name}
-                            width={120}
-                            height={120}
-                            className="object-contain"
-                        />
+                    <div className={'flex items-center'}>
+                        <div className="w-[180px]  h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
+                            <Image
+                                src={selectedProduct.image}
+                                alt={selectedProduct.name}
+                                width={180}
+                                height={180}
+                                className="w-full h-full object-cover rounded-full"
+                            />
+                        </div>
                     </div>
+
 
                     <p className="text-center text-xl font-semibold text-gray-800 mb-1">{selectedProduct.name}</p>
 
