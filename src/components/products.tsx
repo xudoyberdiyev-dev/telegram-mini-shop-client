@@ -98,11 +98,16 @@ export default function Products({query, categoryId, userId}: Props) {
                         onClick={() => handleProductClick(product._id)}
                         className="cursor-pointer bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 p-4 flex flex-col items-center"
                     >
-                        <div
-                            className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center mb-4">
-                            <Image src={product.image} alt={product.name} width={80} height={80}
-                                   className="object-contain"/>
+                        <div className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center overflow-hidden mb-4">
+                            <Image
+                                src={product.image}
+                                alt={product.name}
+                                width={120}
+                                height={120}
+                                className="object-cover w-full h-full rounded-full"
+                            />
                         </div>
+
                         <h2 className="text-base font-semibold text-gray-800 mb-2 text-center">{product.name}</h2>
                         <div className="flex justify-between items-center w-full px-2 mt-auto">
                             <span className="text-yellow-600 font-bold text-sm">{product.price} {"so'm"}</span>
@@ -146,10 +151,16 @@ export default function Products({query, categoryId, userId}: Props) {
                         </button>
                     </div>
 
-                    <div className="relative flex justify-center items-center mb-6">
-                        <Image src={selectedProduct.image} alt={selectedProduct.name} width={180} height={180}
-                               className="rounded-xl object-contain"/>
+                    <div className="w-[180px] h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
+                        <Image
+                            src={selectedProduct.image}
+                            alt={selectedProduct.name}
+                            width={180}
+                            height={180}
+                            className="w-full h-full object-cover rounded-full"
+                        />
                     </div>
+
 
                     <p className="text-center text-xl font-semibold text-gray-800 mb-1">{selectedProduct.name}</p>
 

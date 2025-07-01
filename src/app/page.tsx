@@ -7,7 +7,8 @@ import {useEffect, useState} from "react";
 import {Toaster} from "react-hot-toast";
 
 export default function Page() {
-    const [userId, setUserId] = useState('');
+    const [userId, setUserId] = useState
+    ('');
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
 
