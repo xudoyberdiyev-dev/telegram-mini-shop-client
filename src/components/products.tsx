@@ -151,7 +151,7 @@ export default function Products({query, categoryId, userId}: Props) {
                         </button>
                     </div>
 
-                    <div className={'flex items-center'}>
+                    <div className={'flex justify-center  w-full'}>
                         <div className="w-[180px]  h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
                             <Image
                                 src={selectedProduct.image}
