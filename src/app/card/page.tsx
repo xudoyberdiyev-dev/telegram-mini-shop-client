@@ -112,13 +112,16 @@ export default function BasketPage() {
                                 key={item._id}
                                 className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3"
                             >
-                                <Image
-                                    src={item.product.image}
-                                    alt={item.product.name}
-                                    width={90}
-                                    height={100}
-                                    className="rounded-lg object-contain"
-                                />
+                                <div className="w-[90px] h-[100px] flex items-center justify-center overflow-hidden">
+                                    <Image
+                                        src={item.product.image}
+                                        alt={item.product.name}
+                                        width={90}
+                                        height={100}
+                                        className="rounded-lg object-contain"
+                                    />
+                                </div>
+
                                 <div className="flex-1 flex flex-col justify-between text-sm">
                                     <p className="font-semibold text-gray-900 leading-tight mb-1">
                                         {item.product.name}
