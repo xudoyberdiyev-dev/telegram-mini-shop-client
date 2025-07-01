@@ -29,7 +29,7 @@ interface BasketResponse {
 }
 
 export default function BasketPage() {
-    const [userId,setUserId]=useState('')
+    const [userId, setUserId] = useState('');
     const [items, setItems] = useState<BasketItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [phone, setPhone] = useState('');
@@ -94,24 +94,24 @@ export default function BasketPage() {
         }
 
     };
+
+
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        const userIdFromUrl = urlParams.get("userId");
+        const userIdFromUrl = urlParams.get('userId');
 
         if (userIdFromUrl) {
-            localStorage.setItem("userId", userIdFromUrl);
+            localStorage.setItem('userId', userIdFromUrl);
             setUserId(userIdFromUrl);
         } else {
-            const stored = localStorage.getItem("userId");
+            const stored = localStorage.getItem('userId');
             if (stored) {
                 setUserId(stored);
             } else {
-                toast.error("Foydalanuvchi aniqlanmadi");
+                alert('❌ Foydalanuvchi aniqlanmadi');
             }
         }
-    }, []);
-
-
+    }, [])
     useEffect(() => {
         if (userId) fetchBasket();
     }, [userId,fetchBasket]);
