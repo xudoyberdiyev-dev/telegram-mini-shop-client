@@ -13,7 +13,7 @@ interface Category {
 }
 
 export default function Page() {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<Category[]>([]);
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState<string>('');
@@ -26,7 +26,7 @@ export default function Page() {
         try {
             const res = await axios.get(`${BASE_URL}${APP_API.category}`);
             setCategories(res.data);
-            setLoading(true)
+            setLoading(false)
         } catch (err) {
             console.log(err);
         }

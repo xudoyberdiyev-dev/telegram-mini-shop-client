@@ -100,7 +100,7 @@ export default function BasketPage() {
     }, [userId, fetchBasket]);
 
     return (
-        <div className={'bg-[#FAFAF5]'}>
+        <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <Navbar/>
             <div className="mx-3 mt-4 mb-28 ">
                 {items.length > 0 ? (
