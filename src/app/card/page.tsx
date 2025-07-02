@@ -102,7 +102,7 @@ export default function BasketPage() {
     return (
         <>
             <Navbar/>
-            <div className="mx-3 mt-4 mb-28">
+            <div className="mx-3 mt-4 mb-28 bg-[#FAFAF5]">
                 {items.length > 0 ? (
                     <>
                         <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Sizning savatingiz</h2>
@@ -206,7 +206,7 @@ export default function BasketPage() {
                                     <div className="flex justify-between items-center gap-2">
         <span className="text-gray-700 font-medium whitespace-nowrap">
           Umumiy narx:
-          <span className="text-yellow-600 font-bold ml-2">{totalPrice} so‘m</span>
+          <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
         </span>
 
                                         <button
