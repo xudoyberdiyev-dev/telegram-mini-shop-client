@@ -100,9 +100,9 @@ export default function BasketPage() {
     }, [userId, fetchBasket]);
 
     return (
-        <div className={'bg-[#FAFAF5] h-[100vh] mx-3 mt-4 mb-28 '}>
+        <div className={'bg-[#FAFAF5] h-[100vh] mx-3'}>
             <Navbar/>
-            <div className="">
+            <div className="mt-4 mb-28">
                 {items.length > 0 ? (
                     <>
                         <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Sizning savatingiz</h2>
