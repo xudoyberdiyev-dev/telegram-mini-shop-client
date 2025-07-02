@@ -7,18 +7,9 @@ import {useEffect, useState} from "react";
 import {Toaster} from "react-hot-toast";
 
 export default function Page() {
-    const [userId, setUserId] = useState
-    ('');
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
-
-    useEffect(() => {
-        // Bu kod faqat client (brauzerda) ishlaydi
-        const storedId = localStorage.getItem('userId');
-        if (storedId) {
-            setUserId(storedId);
-        }
-    }, []);
+    const userId = '685ee0acf08ef18a957452b1';
     return (
         <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <>
@@ -29,7 +20,7 @@ export default function Page() {
                     setCategoryId(id);
                     setSearchQuery('');
                 }}/>
-                <Products query={searchQuery} categoryId={categoryId}  userId={userId} />
+                <Products query={searchQuery} categoryId={categoryId} userId={userId}/>
             </>
         </div>
     )
