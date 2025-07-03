@@ -27,7 +27,6 @@ export default function Page() {
             }
         }
     }, []);
-    alert("alaer"+categoryId)
 
     return (
         <div className={'bg-[#FAFAF5] h-[100vh]'}>
