@@ -3,15 +3,33 @@ import Category from "@/components/category";
 import Search from "@/components/search";
 import Products from "@/components/products";
 import Navbar from "@/components/navbar";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Toaster} from "react-hot-toast";
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
-    const userId = '685ee0acf08ef18a957452b1';
+    const [userId, setUserId] = useState<string | null>(null); // 👈
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userIdFromUrl = urlParams.get("userId");
+
+        if (userIdFromUrl) {
+            localStorage.setItem("userId", userIdFromUrl);
+            setUserId(userIdFromUrl);
+            console.log("userId URL dan saqlandi:", userIdFromUrl);
+        } else {
+            const storedUserId = localStorage.getItem("userId");
+            if (storedUserId) {
+                setUserId(storedUserId);
+                console.log("userId localStorage dan olindi:", storedUserId);
+            }
+        }
+    }, []);
+
     return (
-        <div className={'bg-[#FAFAF5] h-[100vh]'}>
+        <div className={'bg-[#FAFAF5] h-[100%]'}>
             <>
                 <Navbar/>
                 <Toaster position={'top-center'} reverseOrder={false}/>
