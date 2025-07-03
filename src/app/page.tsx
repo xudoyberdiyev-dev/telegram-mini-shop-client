@@ -3,8 +3,8 @@ import Category from "@/components/category";
 import Search from "@/components/search";
 import Products from "@/components/products";
 import Navbar from "@/components/navbar";
-import {useState} from "react";
-import {Toaster} from "react-hot-toast";
+import { useState } from "react";
+import { Toaster } from "react-hot-toast";
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -13,14 +13,14 @@ export default function Page() {
     return (
         <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <>
-                <Navbar/>
-                <Toaster position={'top-center'} reverseOrder={false}/>
-                <Search onSearch={setSearchQuery}/>
+                <Navbar />
+                <Toaster position={'top-center'} reverseOrder={false} />
+                <Search onSearch={setSearchQuery} />
                 <Category onSelectCategory={(id) => {
                     setCategoryId(id);
                     setSearchQuery('');
-                }}/>
-                <Products query={searchQuery} categoryId={categoryId} userId={userId}/>
+                }} />
+                <Products query={searchQuery} categoryId={categoryId} userId={userId} />
             </>
         </div>
     )
