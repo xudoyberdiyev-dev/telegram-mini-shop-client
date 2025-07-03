@@ -1,5 +1,4 @@
 'use client'
-import Category from "@/components/category";
 import Search from "@/components/search";
 import Products from "@/components/products";
 import Navbar from "@/components/navbar";
