@@ -5,6 +5,7 @@ import Products from "@/components/products";
 import Navbar from "@/components/navbar";
 import {useEffect, useState} from "react";
 import {Toaster} from "react-hot-toast";
+import CategoryFilter from "@/components/category";
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -27,6 +28,7 @@ export default function Page() {
             }
         }
     }, []);
+    alert("alaer"+categoryId)
 
     return (
         <div className={'bg-[#FAFAF5] h-[100vh]'}>
@@ -34,14 +36,12 @@ export default function Page() {
                 <Navbar/>
                 <Toaster position={'top-center'} reverseOrder={false}/>
                 <Search onSearch={setSearchQuery}/>
-                <Category onSelectCategory={(id) => {
+                <CategoryFilter onSelectCategory={(id) => {
                     setCategoryId(id);
                     setSearchQuery('');
                 }}/>
-                {userId ? (
-                    <Products query={searchQuery} categoryId={categoryId} userId={userId}/>
-                ) : (
-                    <div className="text-center text-gray-500 py-10">Foydalanuvchi aniqlanmoqda...</div>
+                {userId && (
+                    <Products query={searchQuery} categoryId={categoryId} userId={userId} />
                 )}
 
             </>

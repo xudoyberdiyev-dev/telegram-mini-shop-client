@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from 'react';
 import axios from 'axios';
+import {BASE_URL} from "@/connection/BaseUrl";
 
 interface Product {
     _id: string;
@@ -44,7 +45,7 @@ export default function Page() {
     const fetchOrders = async (page: number = 1) => {
         setLoading(true);
         try {
-            const res = await axios.get<ResponseType>(`http://localhost:5000/api/v1/order/getAllOrders?page=${page}&limit=5&chatId=${chatId}`);
+            const res = await axios.get<ResponseType>(`${BASE_URL}/order/getAllOrders?page=${page}&limit=5&chatId=${chatId}`);
             setOrders(res.data.orders);
             setCurrentPage(res.data.currentPage);
             setTotalPages(res.data.totalPages);
