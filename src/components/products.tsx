@@ -20,7 +20,7 @@ interface Product {
 interface Props {
     query: string;
     categoryId?: string | null;
-    userId: string;
+    userId: string | null;
 }
 
 export default function Products({query, categoryId, userId}: Props) {
