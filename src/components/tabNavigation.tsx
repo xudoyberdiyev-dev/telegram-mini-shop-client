@@ -34,7 +34,8 @@ export function TabNavigation() {
 
     useEffect(() => {
         const url = new URL(window.location.href);
-        const idFromUrl = url.searchParams.get("chatId");
+        const idFromUrl = url.searchParams.get("userId");
+        
         if (idFromUrl) {
             localStorage.setItem("chatId", idFromUrl);
             setChatId(idFromUrl);

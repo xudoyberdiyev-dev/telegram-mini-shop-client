@@ -3,7 +3,7 @@ import Category from "@/components/category";
 import Search from "@/components/search";
 import Products from "@/components/products";
 import Navbar from "@/components/navbar";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Toaster} from "react-hot-toast";
 
 export default function Page() {
@@ -29,7 +29,7 @@ export default function Page() {
     }, []);
 
     return (
-        <div className={'bg-[#FAFAF5] h-[100%]'}>
+        <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <>
                 <Navbar/>
                 <Toaster position={'top-center'} reverseOrder={false}/>
