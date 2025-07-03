@@ -38,7 +38,12 @@ export default function Page() {
                     setCategoryId(id);
                     setSearchQuery('');
                 }}/>
-                <Products query={searchQuery} categoryId={categoryId} userId={userId}/>
+                {userId ? (
+                    <Products query={searchQuery} categoryId={categoryId} userId={userId}/>
+                ) : (
+                    <div className="text-center text-gray-500 py-10">Foydalanuvchi aniqlanmoqda...</div>
+                )}
+
             </>
         </div>
     )
