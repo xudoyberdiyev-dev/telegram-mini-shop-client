@@ -103,9 +103,9 @@ export default function BasketPage() {
 
 
     return (
-        <div className={'bg-[#FAFAF5] h-[100vh] px-3'}>
+        <div className={'bg-[#FAFAF5] h-[100vh] '}>
             <Navbar/>
-            <div className="mt-4 mb-28">
+            <div className="mt-4 mb-28 px-3">
                 {items.length > 0 ? (
                     <>
                         <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Sizning savatingiz</h2>
