@@ -3,6 +3,7 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {BASE_URL} from "@/connection/BaseUrl";
+import Loading from "@/components/Loading";
 
 interface Product {
     _id: string;
@@ -80,7 +81,7 @@ export default function Page() {
         fetchOrders();
     }, [chatId, currentPage]);
 
-    if (!chatId) return <div className="text-center mt-10">Yuklanmoqda...</div>;
+    if (!chatId) return <div className="text-center mt-10"><Loading/></div>;
 
     if (chatId !== '1364069488') {
         return <div className="text-center text-red-600 mt-10 text-lg">⛔ Sizda ruxsat yo‘q</div>;
@@ -93,7 +94,7 @@ export default function Page() {
             </div>
 
             {loading ? (
-                <p>Yuklanmoqda...</p>
+                <Loading/>
             ) : (
                 <>
                     {orders.map((order) => (

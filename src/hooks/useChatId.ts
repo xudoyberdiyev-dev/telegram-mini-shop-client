@@ -1,23 +1,21 @@
-// hooks/useChatId.ts
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 export function useChatId(): string | null {
     const [chatId, setChatId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
             const url = new URL(window.location.href);
-            const fromUrl = url.searchParams.get("chatId");
+            const idFromUrl = url.searchParams.get("chatId");
 
-            if (fromUrl) {
-                localStorage.setItem("chatId", fromUrl);
-                setChatId(fromUrl);
+            if (idFromUrl) {
+                localStorage.setItem("chatId", idFromUrl);
+                setChatId(idFromUrl);
             } else {
-                const fromStorage = localStorage.getItem("chatId");
-                if (fromStorage) setChatId(fromStorage);
+                const idFromStorage = localStorage.getItem("chatId");
+                if (idFromStorage) setChatId(idFromStorage);
             }
         }
     }, []);
-
     return chatId;
 }

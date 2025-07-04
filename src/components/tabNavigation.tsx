@@ -18,7 +18,7 @@ import {useUserId} from "@/hooks/useUserId";
 export function TabNavigation() {
     const pathname = usePathname();
     const userId = useUserId();
-    const isAdmin = useIsAdmin(); 
+    const isAdmin = useIsAdmin();
     const {cartCount, setCartCount} = useCartStore();
 
     useEffect(() => {
