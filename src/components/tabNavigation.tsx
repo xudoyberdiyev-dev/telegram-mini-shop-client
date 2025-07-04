@@ -1,6 +1,6 @@
 'use client';
 
-import {JSX, useEffect} from "react";
+import {JSX, useEffect, useState} from "react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {FaHome, FaShoppingBasket} from "react-icons/fa";
@@ -13,13 +13,11 @@ import {BASE_URL} from "@/connection/BaseUrl";
 import {APP_API} from "@/connection/AppApi";
 import {useCartStore} from "@/utils/cartStore";
 import {useUserId} from "@/hooks/useUserId";
-import {useChatId} from "@/hooks/useChatId";
 
 export function TabNavigation() {
     const pathname = usePathname();
     const userId = useUserId();
-    const chatId = useChatId();
-
+    const [chatId, setChatId] = useState('');
     const {cartCount, setCartCount} = useCartStore();
 
     useEffect(() => {
@@ -36,8 +34,20 @@ export function TabNavigation() {
         fetchCartCount();
     }, [userId, setCartCount]);
 
-    const ADMIN_ID = "1364069488";
-    const isAdmin = chatId === ADMIN_ID;
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const idFromUrl = url.searchParams.get("userId");
+
+        if (idFromUrl) {
+            localStorage.setItem("userId", idFromUrl);
+            setChatId(idFromUrl);
+        } else {
+            const idFromStorage = localStorage.getItem("userId");
+            if (idFromStorage) setChatId(idFromStorage);
+        }
+    }, []);
+
+    const isAdmin = chatId === "1364069488";
 
     const navLink = (href: string, icon: JSX.Element, label: string) => (
         <Link
