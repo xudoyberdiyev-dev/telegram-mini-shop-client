@@ -18,10 +18,12 @@ import {useUserId} from "@/hooks/useUserId";
 export function TabNavigation() {
     const pathname = usePathname();
     const userId = useUserId();
+    const isAdmin = useIsAdmin(); 
     const {cartCount, setCartCount} = useCartStore();
 
     useEffect(() => {
         const fetchCartCount = async () => {
+            if (!userId) return;
             try {
                 const res = await axios.get(`${BASE_URL}${APP_API.basket}/${userId}`);
                 setCartCount(res.data.products.length);
@@ -32,8 +34,6 @@ export function TabNavigation() {
 
         fetchCartCount();
     }, [userId, setCartCount]);
-
-    const isAdmin = useIsAdmin()
 
     const navLink = (href: string, icon: JSX.Element, label: string) => (
         <Link
@@ -53,7 +53,6 @@ export function TabNavigation() {
                 {!isAdmin ? (
                     <>
                         {navLink("/", <FaHome className="text-xl mb-1"/>, "Mahsulotlar")}
-
                         <Link
                             href="/card"
                             className={`flex-1 py-3 flex flex-col items-center justify-center ${
@@ -65,8 +64,8 @@ export function TabNavigation() {
                                 {cartCount > 0 && (
                                     <span
                                         className="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount}
-                  </span>
+                                        {cartCount}
+                                    </span>
                                 )}
                             </div>
                             <span className="text-xs font-medium">Savat</span>

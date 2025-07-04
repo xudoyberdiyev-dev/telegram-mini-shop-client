@@ -87,7 +87,7 @@ export default function Page() {
     }
 
     return (
-        <div className="max-w-5xl mx-auto p-4">
+        <div className="max-w-5xl mx-auto p-4 bg-[#FAFAF5]">
             <div className="w-full h-11 mb-3 px-4 rounded-xl shadow-md bg-white">
                 <h1 className="text-3xl font-semibold text-yellow-600 text-center">Buyurtmalar</h1>
             </div>

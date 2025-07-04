@@ -1,6 +1,8 @@
-import {useChatId} from "@/hooks/useChatId";
+// hooks/useIsAdmin.ts
+import { useChatId } from "./useChatId";
 
-export function useIsAdmin() {
+export function useIsAdmin(): boolean {
     const chatId = useChatId();
-    return chatId === '1364069488';
+    const ADMIN_ID = "1364069488";
+    return chatId === ADMIN_ID;
 }

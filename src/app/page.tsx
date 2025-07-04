@@ -29,7 +29,7 @@ export default function Page() {
     }, []);
 
     return (
-        <div className={'bg-[#FAFAF5] h-[100vh]'}>
+        <div className={'bg-[#FAFAF5] h-[100%]'}>
             <>
                 <Navbar/>
                 <Toaster position={'top-center'} reverseOrder={false}/>
