@@ -47,7 +47,7 @@ export function TabNavigation() {
     }, []);
 
 
-    const isAdmin = chatId === "1364069488";
+    const isAdmin = chatId === "1085241246";
 
     const navLink = (href: string, icon: JSX.Element, label: string) => (
         <Link

@@ -83,7 +83,7 @@ export default function Page() {
 
     if (!chatId) return <div className="text-center mt-10"><Loading/></div>;
 
-    if (chatId !== '1364069488') {
+    if (chatId !== '1085241246') {
         return <div className="text-center text-red-600 mt-10 text-lg">⛔ Sizda ruxsat yo‘q</div>;
     }
 
