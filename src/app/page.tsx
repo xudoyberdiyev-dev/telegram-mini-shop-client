@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar";
 import {useEffect, useState} from "react";
 import {Toaster} from "react-hot-toast";
 import CategoryFilter from "@/components/category";
+import Footer from "@/components/Footer";
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +42,7 @@ export default function Page() {
                 {userId && (
                     <Products query={searchQuery} categoryId={categoryId} userId={userId} />
                 )}
-
+                <Footer/>
             </>
         </div>
     )
