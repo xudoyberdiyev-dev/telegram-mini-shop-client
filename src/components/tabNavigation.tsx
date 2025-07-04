@@ -12,9 +12,12 @@ import axios from "axios";
 import { BASE_URL } from "@/connection/BaseUrl";
 import { APP_API } from "@/connection/AppApi";
 import { useCartStore } from "@/utils/cartStore";
+import {useIsAdmin} from "@/hooks/useIsAdmin";
+import {useUserId} from "@/hooks/useUserId";
 
 export function TabNavigation() {
     const pathname = usePathname();
+    const userIdd = useUserId();
     const [chatId, setChatId] = useState("");
     const { cartCount, setCartCount } = useCartStore();
 
@@ -46,7 +49,7 @@ export function TabNavigation() {
 
 
 
-    const isAdmin = chatId === "1364069488";
+    const isAdmin =useIsAdmin()
 
     const navLink = (href: string, icon: JSX.Element, label: string) => (
         <Link
@@ -82,7 +85,7 @@ export function TabNavigation() {
                                 )}
                             </div>
                             <span className="text-xs font-medium">Savat</span>
-                            <div>chatId:{chatId}</div>
+                            <div>chatId:{userIdd}</div>
                         </Link>
                     </>
                 ) : (
