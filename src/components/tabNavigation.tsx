@@ -7,6 +7,7 @@ import {FaHome, FaShoppingBasket} from "react-icons/fa";
 import {TbCategoryPlus} from "react-icons/tb";
 import {MdProductionQuantityLimits} from "react-icons/md";
 import {FaClipboardList} from "react-icons/fa";
+import { FaUser } from 'react-icons/fa';
 
 import axios from "axios";
 import {BASE_URL} from "@/connection/BaseUrl";
@@ -85,6 +86,7 @@ export function TabNavigation() {
                             </div>
                             <span className="text-xs font-medium">Savat</span>
                         </Link>
+                        {navLink("/user", <FaUser className="text-xl mb-1"/>, "Kabinet")}
                     </>
                 ) : (
                     <>
