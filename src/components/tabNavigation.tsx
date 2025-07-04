@@ -16,13 +16,12 @@ import { useCartStore } from "@/utils/cartStore";
 export function TabNavigation() {
     const pathname = usePathname();
     const [chatId, setChatId] = useState("");
-    const userId = '685ee0acf08ef18a957452b1';
     const { cartCount, setCartCount } = useCartStore();
 
     useEffect(() => {
         const fetchCartCount = async () => {
             try {
-                const res = await axios.get(`${BASE_URL}${APP_API.basket}/${userId}`);
+                const res = await axios.get(`${BASE_URL}${APP_API.basket}/${chatId}`);
                 setCartCount(res.data.products.length);
             } catch {
                 setCartCount(0);
@@ -30,7 +29,7 @@ export function TabNavigation() {
         };
 
         fetchCartCount();
-    }, [userId, setCartCount]);
+    }, [chatId, setCartCount]);
 
     useEffect(() => {
         const url = new URL(window.location.href);
