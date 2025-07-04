@@ -4,7 +4,6 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {BASE_URL} from "@/connection/BaseUrl";
 import Loading from "@/components/Loading";
-import {useChatId} from "@/hooks/useChatId";
 
 interface Product {
     _id: string;
@@ -38,13 +37,24 @@ interface ResponseType {
 }
 
 export default function Page() {
-    const chatId = useChatId();
+    const [chatId, setChatId] = useState<string | null>(null);
     const [orders, setOrders] = useState<Order[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const chatIdFromUrl = url.searchParams.get("chatId");
+        const storedChatId = localStorage.getItem("chatId");
 
+        if (chatIdFromUrl) {
+            localStorage.setItem("chatId", chatIdFromUrl);
+            setChatId(chatIdFromUrl);
+        } else if (storedChatId) {
+            setChatId(storedChatId);
+        }
+    }, []);
 
     useEffect(() => {
         if (!chatId) return;
