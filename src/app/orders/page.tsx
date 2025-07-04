@@ -36,39 +36,55 @@ interface ResponseType {
 }
 
 export default function Page() {
-    const chatId ='1364069488'
+    const [chatId, setChatId] = useState<string | null>(null);
     const [orders, setOrders] = useState<Order[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    const fetchOrders = async (page: number = 1) => {
-        setLoading(true);
-        try {
-            const res = await axios.get<ResponseType>(`${BASE_URL}/order/getAllOrders?page=${page}&limit=5&chatId=${chatId}`);
-            setOrders(res.data.orders);
-            setCurrentPage(res.data.currentPage);
-            setTotalPages(res.data.totalPages);
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const msg = err.response?.data?.msg || 'Buyurtma berishda xatolik yuz berdi';
-                alert(msg);
-            } else {
-                alert('Nomaʼlum xatolik yuz berdi');
-            }
-        }
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const chatIdFromUrl = url.searchParams.get("chatId");
+        const storedChatId = localStorage.getItem("chatId");
 
-    };
+        if (chatIdFromUrl) {
+            localStorage.setItem("chatId", chatIdFromUrl);
+            setChatId(chatIdFromUrl);
+        } else if (storedChatId) {
+            setChatId(storedChatId);
+        }
+    }, []);
 
     useEffect(() => {
-        fetchOrders(currentPage);
-    }, [currentPage]);
+        if (!chatId) return;
 
-    const handlePageChange = (newPage: number) => {
-        if (newPage >= 1 && newPage <= totalPages) {
-            setCurrentPage(newPage);
-        }
-    };
+        const fetchOrders = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get<ResponseType>(`${BASE_URL}/order/getAllOrders?page=${currentPage}&limit=5&chatId=${chatId}`);
+                setOrders(res.data.orders);
+                setCurrentPage(res.data.currentPage);
+                setTotalPages(res.data.totalPages);
+            } catch (err: unknown) {
+                if (axios.isAxiosError(err)) {
+                    const msg = err.response?.data?.msg || 'Buyurtma olishda xatolik';
+                    alert(msg);
+                } else {
+                    alert('Nomaʼlum xatolik yuz berdi');
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, [chatId, currentPage]);
+
+    if (!chatId) return <div className="text-center mt-10">Yuklanmoqda...</div>;
+
+    if (chatId !== '1364069488') {
+        return <div className="text-center text-red-600 mt-10 text-lg">⛔ Sizda ruxsat yo‘q</div>;
+    }
 
     return (
         <div className="max-w-5xl mx-auto p-4">
@@ -103,7 +119,7 @@ export default function Page() {
 
                     <div className="flex justify-center gap-2 mt-6">
                         <button
-                            onClick={() => handlePageChange(currentPage - 1)}
+                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                             disabled={currentPage === 1}
                             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
                         >
@@ -113,7 +129,7 @@ export default function Page() {
                             {currentPage} / {totalPages}
                         </span>
                         <button
-                            onClick={() => handlePageChange(currentPage + 1)}
+                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                             disabled={currentPage === totalPages}
                             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50"
                         >
