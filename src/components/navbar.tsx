@@ -10,7 +10,7 @@ export default function Navbar() {
         <>
             <nav className="w-full backdrop-blur-md bg-white/70 border-b border-gray-200 px-5 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
                 <Link href="/" className="text-[20px] font-extrabold tracking-wide text-yellow-500 drop-shadow-sm">
-                    Mini Shop
+                    Hasan Husan optom
                 </Link>
             </nav>
 
