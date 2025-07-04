@@ -29,7 +29,7 @@ interface BasketResponse {
 }
 
 export default function BasketPage() {
-    const userId = '685ee0acf08ef18a957452b1';
+    const [userId,setUserId] = useState('');
     const [items, setItems] = useState<BasketItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [phone, setPhone] = useState('');
@@ -98,6 +98,19 @@ export default function BasketPage() {
     useEffect(() => {
         if (userId) fetchBasket();
     }, [userId, fetchBasket]);
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const idFromUrl = url.searchParams.get("userId");
+
+        if (idFromUrl) {
+            localStorage.setItem("userId", idFromUrl);
+            setUserId(idFromUrl);
+        } else {
+            const idFromStorage = localStorage.getItem("userId");
+            if (idFromStorage) setUserId(idFromStorage);
+        }
+    }, []);
 
     return (
         <div className={'bg-[#FAFAF5] h-[100vh] px-3'}>
