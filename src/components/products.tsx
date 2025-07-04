@@ -125,7 +125,7 @@ export default function Products({query, categoryId, userId}: Props) {
                 ))}
             </div>
 
-            <div className={'w-full mt-6 h-[15vh] mb-6 flex justify-center'}>
+            <div className={'w-full mt-6 h-[5vh] mb-6 flex justify-center'}>
                 {visibleCount < products.length && (
                     <div className={''}>
                         <button
