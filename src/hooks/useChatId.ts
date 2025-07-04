@@ -4,17 +4,15 @@ export function useChatId(): string | null {
     const [chatId, setChatId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const url = new URL(window.location.href);
-            const idFromUrl = url.searchParams.get("chatId");
+        const url = new URL(window.location.href);
+        const chatIdFromUrl = url.searchParams.get("chatId");
+        const storedChatId = localStorage.getItem("chatId");
 
-            if (idFromUrl) {
-                localStorage.setItem("chatId", idFromUrl);
-                setChatId(idFromUrl);
-            } else {
-                const idFromStorage = localStorage.getItem("chatId");
-                if (idFromStorage) setChatId(idFromStorage);
-            }
+        if (chatIdFromUrl) {
+            localStorage.setItem("chatId", chatIdFromUrl);
+            setChatId(chatIdFromUrl);
+        } else if (storedChatId) {
+            setChatId(storedChatId);
         }
     }, []);
     return chatId;
