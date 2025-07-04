@@ -47,7 +47,7 @@ export default function ProductPage() {
 
     const getPaginatedProducts = async (page: number) => {
         try {
-            setLoading(true);
+            setLoading(false);
             const res = await axios.get<PaginatedResponse>(`${BASE_URL}${APP_API.product}/paginated?page=${page}&limit=8`);
             setProducts(res.data.products);
             setCurrentPage(res.data.currentPage);
