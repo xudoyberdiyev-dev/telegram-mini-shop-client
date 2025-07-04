@@ -245,6 +245,7 @@ export default function BasketPage() {
                             <button
                                 className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
+                                <div>userId:{userId}</div>
                             </button>
                         </div>
                     </div>
