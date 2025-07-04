@@ -12,13 +12,14 @@ import axios from "axios";
 import {BASE_URL} from "@/connection/BaseUrl";
 import {APP_API} from "@/connection/AppApi";
 import {useCartStore} from "@/utils/cartStore";
-import {useIsAdmin} from "@/hooks/useIsAdmin";
 import {useUserId} from "@/hooks/useUserId";
+import {useChatId} from "@/hooks/useChatId";
 
 export function TabNavigation() {
     const pathname = usePathname();
     const userId = useUserId();
-    const isAdmin = useIsAdmin();
+    const chatId = useChatId();
+
     const {cartCount, setCartCount} = useCartStore();
 
     useEffect(() => {
@@ -34,6 +35,9 @@ export function TabNavigation() {
 
         fetchCartCount();
     }, [userId, setCartCount]);
+
+    const ADMIN_ID = "1364069488";
+    const isAdmin = chatId === ADMIN_ID;
 
     const navLink = (href: string, icon: JSX.Element, label: string) => (
         <Link
