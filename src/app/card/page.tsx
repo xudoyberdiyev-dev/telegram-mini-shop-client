@@ -10,6 +10,7 @@ import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
 import Link from "next/link";
 import toast from "react-hot-toast";
+import {useUserId} from "@/hooks/useUserId";
 
 interface BasketItem {
     _id: string;
@@ -29,7 +30,7 @@ interface BasketResponse {
 }
 
 export default function BasketPage() {
-    const [userId,setUserId] = useState('');
+    const userId =useUserId()
     const [items, setItems] = useState<BasketItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [phone, setPhone] = useState('');
@@ -99,18 +100,7 @@ export default function BasketPage() {
         if (userId) fetchBasket();
     }, [userId, fetchBasket]);
 
-    useEffect(() => {
-        const url = new URL(window.location.href);
-        const idFromUrl = url.searchParams.get("userId");
 
-        if (idFromUrl) {
-            localStorage.setItem("userId", idFromUrl);
-            setUserId(idFromUrl);
-        } else {
-            const idFromStorage = localStorage.getItem("userId");
-            if (idFromStorage) setUserId(idFromStorage);
-        }
-    }, []);
 
     return (
         <div className={'bg-[#FAFAF5] h-[100vh] px-3'}>
@@ -245,7 +235,6 @@ export default function BasketPage() {
                             <button
                                 className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
-                                <div>userId:{userId}</div>
                             </button>
                         </div>
                     </div>

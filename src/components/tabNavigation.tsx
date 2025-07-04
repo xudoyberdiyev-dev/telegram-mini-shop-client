@@ -1,30 +1,29 @@
 'use client';
 
-import {JSX, useEffect, useState} from "react";
+import {JSX, useEffect} from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FaHome, FaShoppingBasket} from "react-icons/fa";
-import { TbCategoryPlus } from "react-icons/tb";
-import { MdProductionQuantityLimits } from "react-icons/md";
-import { FaClipboardList } from "react-icons/fa";
+import {usePathname} from "next/navigation";
+import {FaHome, FaShoppingBasket} from "react-icons/fa";
+import {TbCategoryPlus} from "react-icons/tb";
+import {MdProductionQuantityLimits} from "react-icons/md";
+import {FaClipboardList} from "react-icons/fa";
 
 import axios from "axios";
-import { BASE_URL } from "@/connection/BaseUrl";
-import { APP_API } from "@/connection/AppApi";
-import { useCartStore } from "@/utils/cartStore";
+import {BASE_URL} from "@/connection/BaseUrl";
+import {APP_API} from "@/connection/AppApi";
+import {useCartStore} from "@/utils/cartStore";
 import {useIsAdmin} from "@/hooks/useIsAdmin";
 import {useUserId} from "@/hooks/useUserId";
 
 export function TabNavigation() {
     const pathname = usePathname();
-    const userIdd = useUserId();
-    const [chatId, setChatId] = useState("");
-    const { cartCount, setCartCount } = useCartStore();
+    const userId = useUserId();
+    const {cartCount, setCartCount} = useCartStore();
 
     useEffect(() => {
         const fetchCartCount = async () => {
             try {
-                const res = await axios.get(`${BASE_URL}${APP_API.basket}/${chatId}`);
+                const res = await axios.get(`${BASE_URL}${APP_API.basket}/${userId}`);
                 setCartCount(res.data.products.length);
             } catch {
                 setCartCount(0);
@@ -32,24 +31,9 @@ export function TabNavigation() {
         };
 
         fetchCartCount();
-    }, [chatId, setCartCount]);
+    }, [userId, setCartCount]);
 
-    useEffect(() => {
-        const url = new URL(window.location.href);
-        const idFromUrl = url.searchParams.get("userId");
-
-        if (idFromUrl) {
-            localStorage.setItem("chatId", idFromUrl);
-            setChatId(idFromUrl);
-        } else {
-            const idFromStorage = localStorage.getItem("chatId");
-            if (idFromStorage) setChatId(idFromStorage);
-        }
-    }, []);
-
-
-
-    const isAdmin =useIsAdmin()
+    const isAdmin = useIsAdmin()
 
     const navLink = (href: string, icon: JSX.Element, label: string) => (
         <Link
@@ -68,7 +52,7 @@ export function TabNavigation() {
             <div className="flex w-full">
                 {!isAdmin ? (
                     <>
-                        {navLink("/", <FaHome className="text-xl mb-1" />, "Mahsulotlar")}
+                        {navLink("/", <FaHome className="text-xl mb-1"/>, "Mahsulotlar")}
 
                         <Link
                             href="/card"
@@ -77,22 +61,22 @@ export function TabNavigation() {
                             }`}
                         >
                             <div className="relative">
-                                <FaShoppingBasket className="text-xl mb-1" />
+                                <FaShoppingBasket className="text-xl mb-1"/>
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                    <span
+                                        className="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {cartCount}
                   </span>
                                 )}
                             </div>
                             <span className="text-xs font-medium">Savat</span>
-                            <div>chatId:{userIdd}</div>
                         </Link>
                     </>
                 ) : (
                     <>
-                        {navLink("/category", <TbCategoryPlus className="text-xl mb-1" />, "Kategoriya")}
-                        {navLink("/product", <MdProductionQuantityLimits className="text-xl mb-1" />, "Mahsulotlar")}
-                        {navLink("/orders", <FaClipboardList  className="text-xl mb-1" />, "Buyurtmalar")}
+                        {navLink("/category", <TbCategoryPlus className="text-xl mb-1"/>, "Kategoriya")}
+                        {navLink("/product", <MdProductionQuantityLimits className="text-xl mb-1"/>, "Mahsulotlar")}
+                        {navLink("/orders", <FaClipboardList className="text-xl mb-1"/>, "Buyurtmalar")}
                     </>
                 )}
             </div>
