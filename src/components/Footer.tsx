@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="w-full mb-20 text-center py-2 bg-white border-t border-gray-200 text-sm text-gray-600">
             Bot yaratuvchisi:{" "}
             <Link
-                href="https://t.me/javohhirdev"
+                href="https://t.me/@M_Javoxir_1"
                 target="_blank"
                 className="text-yellow-600 hover:underline font-semibold"
             >
