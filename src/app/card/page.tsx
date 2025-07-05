@@ -30,10 +30,9 @@ interface BasketResponse {
 }
 
 export default function BasketPage() {
-    const userId =useUserId()
+    const userId = useUserId();
     const [items, setItems] = useState<BasketItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
     const [showInput, setShowInput] = useState(false);
     const {setCartCount} = useCartStore();
@@ -71,20 +70,13 @@ export default function BasketPage() {
     };
 
     const makeOrder = async () => {
-        if (!phone.trim()) {
-            toast.error('Telefon raqamni kiriting');
-            return;
-        }
-
         try {
             setLoading(true);
             const res = await axios.post(`${BASE_URL}/order/makeOrder`, {
                 user_id: userId,
-                phone: phone,
             });
             alert(res.data.msg || "Buyurtma qabul qilindi");
-            setPhone('');
-            fetchBasket(); // savatni yangilash (bo‘shatish)
+            fetchBasket();
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 const msg = err.response?.data?.msg || 'Buyurtma berishda xatolik yuz berdi';
@@ -92,18 +84,17 @@ export default function BasketPage() {
             } else {
                 alert('Nomaʼlum xatolik yuz berdi');
             }
+        } finally {
+            setLoading(false);
         }
-
     };
 
     useEffect(() => {
         if (userId) fetchBasket();
     }, [userId, fetchBasket]);
 
-
-
     return (
-        <div className={'bg-[#FAFAF5] h-[100vh] '}>
+        <div className={'bg-[#FAFAF5] h-[100vh]'}>
             <Navbar/>
             <div className="mt-4 mb-28 px-3">
                 {items.length > 0 ? (
@@ -132,8 +123,7 @@ export default function BasketPage() {
                                     <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
 
                                     <div className="flex items-center justify-between mt-2">
-                                        <div
-                                            className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                                             <button
                                                 onClick={() => handleCountChange(item._id, item.count - 1)}
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200"
@@ -188,29 +178,15 @@ export default function BasketPage() {
                                 </div>
                             ) : (
                                 <>
-                                    <label>Telifon raqam</label>
-                                    <input
-                                        type="tel"
-                                        placeholder="Masalan: 998872212 "
-                                        value={phone}
-                                        onChange={(e) => {
-                                            const onlyNums = e.target.value.replace(/\D/g, ''); // Faqat raqamlar
-                                            if (onlyNums.length <= 9) {
-                                                setPhone(onlyNums);
-                                            }
-                                        }}
-                                        maxLength={9}
-                                        inputMode="numeric"
-                                        pattern="[0-9]*"
-                                        className="w-full border border-yellow-500 px-4 py-2 rounded-lg mb-3"
-                                    />
-
+                                    <p className="mb-3 text-gray-700 font-medium">
+                                        Rostdan ham buyurtma bermoqchimisiz?
+                                    </p>
 
                                     <div className="flex justify-between items-center gap-2">
-        <span className="text-gray-700 font-medium whitespace-nowrap">
-          Umumiy narx:
-          <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
-        </span>
+                                        <span className="text-gray-700 font-medium whitespace-nowrap">
+                                            Umumiy narx:
+                                            <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
+                                        </span>
 
                                         <button
                                             onClick={makeOrder}
@@ -225,7 +201,6 @@ export default function BasketPage() {
                                 </>
                             )}
                         </div>
-
                     </>
                 ) : (
                     <div className="flex items-center justify-center min-h-[70vh]">
