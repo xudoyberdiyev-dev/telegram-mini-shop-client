@@ -15,6 +15,7 @@ interface User {
 
 export default function UserPage() {
     const [user, setUser] = useState<User>({name: '', phone: ''});
+    const [editableUser, setEditableUser] = useState<User>({name: '', phone: ''});
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
     const userId = useUserId();
@@ -23,13 +24,13 @@ export default function UserPage() {
         if (userId) {
             fetchUser(userId);
         }
-    }, [userId]); // endi userId kelgan paytda ishlaydi
-
+    }, [userId]);
 
     const fetchUser = async (id: string) => {
         try {
             const res = await axios.get(`${BASE_URL}${APP_API.user}/${id}`);
             setUser({name: res.data.name, phone: res.data.phone});
+            setEditableUser({name: res.data.name, phone: res.data.phone});
         } catch (err) {
             console.error('Foydalanuvchini olishda xatolik:', err);
             toast.error("Ma'lumotlarni olib bo'lmadi");
@@ -41,13 +42,19 @@ export default function UserPage() {
     const updateUser = async () => {
         if (!userId) return;
         try {
-            await axios.put(`${BASE_URL}${APP_API.user}/${userId}`, user);
+            await axios.put(`${BASE_URL}${APP_API.user}/${userId}`, editableUser);
             toast.success("Ma'lumotlar yangilandi");
+            setUser(editableUser); // backenddan qayta olish shart emas
             setEditing(false);
         } catch (err) {
             console.error('Yangilash xatoligi:', err);
             toast.error("Xatolik yuz berdi");
         }
+    };
+
+    const handleCancel = () => {
+        setEditableUser(user); // avvalgi qiymatlarni tiklash
+        setEditing(false);
     };
 
     if (loading) {
@@ -57,7 +64,6 @@ export default function UserPage() {
             </div>
         );
     }
-
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
@@ -69,26 +75,22 @@ export default function UserPage() {
                         <label className="text-sm text-gray-700 block mb-1">Ismingiz</label>
                         <input
                             type="text"
-                            value={user.name}
-                            onChange={(e) => setUser({...user, name: e.target.value})}
+                            value={editing ? editableUser.name : user.name}
+                            onChange={(e) => setEditableUser({...editableUser, name: e.target.value})}
                             disabled={!editing}
-                            className={`w-full p-2 rounded border ${
-                                editing ? 'border-yellow-400' : 'border-gray-300 bg-gray-100'
-                            }`}
+                            placeholder="Ismingizni kiriting"
+                            className={`w-full p-2 rounded border ${editing ? 'border-yellow-400' : 'border-gray-300 bg-gray-100'}`}
                         />
                     </div>
                     <div>
                         <label className="text-sm text-gray-700 block mb-1">Telefon raqamingiz</label>
                         <input
                             type="text"
-                            value={user.phone}
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            onChange={(e) => setUser({...user, phone: e.target.value})}
+                            value={editing ? editableUser.phone : user.phone}
+                            onChange={(e) => setEditableUser({...editableUser, phone: e.target.value})}
                             disabled={!editing}
-                            className={`w-full p-2 rounded border ${
-                                editing ? 'border-yellow-400' : 'border-gray-300 bg-gray-100'
-                            }`}
+                            placeholder="Telefon raqam"
+                            className={`w-full p-2 rounded border ${editing ? 'border-yellow-400' : 'border-gray-300 bg-gray-100'}`}
                         />
                     </div>
                 </div>
@@ -97,7 +99,7 @@ export default function UserPage() {
                     {editing ? (
                         <>
                             <button
-                                onClick={() => setEditing(false)}
+                                onClick={handleCancel}
                                 className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm"
                             >
                                 Bekor qilish
