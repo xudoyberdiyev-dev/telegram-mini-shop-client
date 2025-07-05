@@ -59,11 +59,9 @@ export default function UserPage() {
 
     if (loading) {
         return (
-            <div className={'w-full h-full'}>
                 <div className="flex  justify-center items-center h-screen">
                     <Loading/>
                 </div>
-            </div>
 
         );
     }
