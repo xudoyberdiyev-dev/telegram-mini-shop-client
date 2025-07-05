@@ -51,7 +51,7 @@ export default function UserPage() {
 
     if (!loading) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex w-full h-full justify-center items-center h-screen">
                 <Loading/>
             </div>
         );
