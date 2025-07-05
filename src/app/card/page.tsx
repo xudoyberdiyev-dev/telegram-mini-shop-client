@@ -9,7 +9,6 @@ import {BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
 import Link from "next/link";
-import toast from "react-hot-toast";
 import {useUserId} from "@/hooks/useUserId";
 
 interface BasketItem {
