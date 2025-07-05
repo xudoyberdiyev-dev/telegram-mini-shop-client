@@ -23,7 +23,8 @@ export default function UserPage() {
         if (userId) {
             fetchUser(userId);
         }
-    }, []);
+    }, [userId]); // endi userId kelgan paytda ishlaydi
+
 
     const fetchUser = async (id: string) => {
         try {
@@ -49,13 +50,14 @@ export default function UserPage() {
         }
     };
 
-    if (!loading) {
+    if (loading) {
         return (
             <div className="flex w-full h-full justify-center items-center h-screen">
                 <Loading/>
             </div>
         );
     }
+
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
