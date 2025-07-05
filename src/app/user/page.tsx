@@ -15,7 +15,7 @@ interface User {
 
 export default function UserPage() {
     const [user, setUser] = useState<User>({name: '', phone: ''});
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
     const userId = useUserId();
 
@@ -33,7 +33,7 @@ export default function UserPage() {
             console.error('Foydalanuvchini olishda xatolik:', err);
             toast.error("Ma'lumotlarni olib bo'lmadi");
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     };
 
