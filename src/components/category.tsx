@@ -27,7 +27,7 @@ export default function CategoryFilter({ onSelectCategory }: Props) {
                 const allCategory: Category = {
                     _id: 'all',
                     name: 'Hammasi',
-                    image: '/all.jpg',
+                    image: 'https://andstat.uz/images/000000000000000000fdgdfg.jpg',
                 };
                 setCategories([allCategory, ...res.data]);
             })
