@@ -11,6 +11,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'as2.ftcdn.net',
             },
+            {
+                protocol: 'https',
+                hostname: 'andstat.uz',
+            },
         ],
     },
 };

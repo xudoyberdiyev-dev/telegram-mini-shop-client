@@ -6,7 +6,6 @@ import Image from 'next/image';
 import axios from 'axios';
 import { BASE_URL } from '@/connection/BaseUrl';
 import { APP_API } from '@/connection/AppApi';
-
 interface Category {
     _id: string;
     name: string;
