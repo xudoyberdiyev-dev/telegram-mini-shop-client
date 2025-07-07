@@ -8,30 +8,38 @@ import {Toaster} from "react-hot-toast";
 import CategoryFilter from "@/components/category";
 import Footer from "@/components/Footer";
 import {useUserId} from "@/hooks/useUserId";
+import SkeletonSearch from "@/components/SkeletonSearch";
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const userId = useUserId();
 
-    if (!userId) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
-            </div>
-        );
-    }
+    // if (!userId) {
+    //     return (
+    //         <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
+    //             <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="bg-[#FAFAF5] min-h-screen">
             <Navbar/>
             <Toaster position="top-center" reverseOrder={false}/>
-            <Search onSearch={setSearchQuery}/>
+            {
+                loading ? (
+                    <SkeletonSearch/>
+                ) : (
+                    <Search onSearch={setSearchQuery}/>
+                )
+            }
             <CategoryFilter onSelectCategory={(id) => {
                 setCategoryId(id);
                 setSearchQuery('');
             }}/>
-            <Products query={searchQuery} categoryId={categoryId} userId={userId}/>
+            <Products query={searchQuery} categoryId={categoryId} userId={userId} setLoading={setLoading}/>
             <div className="mb-16 ">
                 <Footer/>
             </div>

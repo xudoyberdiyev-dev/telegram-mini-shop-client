@@ -1,15 +1,16 @@
 'use client';
 
-import {FiSearch} from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 
 interface Props {
     onSearch: (value: string) => void;
 }
+
 export default function Search({ onSearch }: Props) {
     return (
         <div className="px-4 mt-4">
             <div className="relative">
-                <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-500 text-lg"/>
+                <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-500 text-lg" />
                 <input
                     type="search"
                     placeholder="Mahsulot qidirish..."
