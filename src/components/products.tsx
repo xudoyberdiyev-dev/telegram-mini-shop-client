@@ -7,7 +7,7 @@ import {FaShoppingBasket} from 'react-icons/fa';
 import {BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
-import toast from "react-hot-toast"; // ✅ Qo‘shildi
+import toast from "react-hot-toast";
 
 interface Product {
     _id: string;
@@ -44,7 +44,6 @@ export default function Products({query, categoryId, userId}: Props) {
                 count,
             });
 
-            // ✅ Savatni qayta olib, count ni yangilaymiz
             const res = await axios.get(`${BASE_URL}${APP_API.basket}/${userId}`);
             setCartCount(res.data.products.length);
 
@@ -91,6 +90,10 @@ export default function Products({query, categoryId, userId}: Props) {
 
     return (
         <div className="px-3">
+            <div>
+                <h1 className={'text-center text-2xl font-bold p-1 text-yellow-500'}>Maxsulotlar</h1>
+            </div>
+
             <div className="grid grid-cols-2 gap-3 mt-6">
                 {displayProducts.map((product) => (
                     <div
@@ -98,7 +101,8 @@ export default function Products({query, categoryId, userId}: Props) {
                         onClick={() => handleProductClick(product._id)}
                         className="cursor-pointer bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 p-4 flex flex-col items-center"
                     >
-                        <div className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center overflow-hidden mb-4">
+                        <div
+                            className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center overflow-hidden mb-4">
                             <Image
                                 src={product.image}
                                 alt={product.name}
@@ -124,6 +128,22 @@ export default function Products({query, categoryId, userId}: Props) {
                     </div>
                 ))}
             </div>
+
+            {products.length === 0 && (
+                <div>
+                    {query && (
+                        <p className="text-center text-xl text-red-500 font-semibold mt-6">
+                            Qidiruv natijasida mahsulot topilmadi
+                        </p>
+                    )}
+                    {!query && categoryId && (
+                        <p className="text-center text-xl text-red-500 font-semibold mt-6">
+                            Ushbu bo‘limga tegishli maxsulotlar hozirda mavjud emas
+                        </p>
+                    )}
+                </div>
+            )}
+
 
             <div className={'w-full mt-6 h-[5vh] mb-6 flex justify-center'}>
                 {visibleCount < products.length && (
@@ -152,7 +172,8 @@ export default function Products({query, categoryId, userId}: Props) {
                     </div>
 
                     <div className={'flex justify-center  w-full'}>
-                        <div className="w-[180px]  h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
+                        <div
+                            className="w-[180px]  h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
                             <Image
                                 src={selectedProduct.image}
                                 alt={selectedProduct.name}
@@ -162,7 +183,6 @@ export default function Products({query, categoryId, userId}: Props) {
                             />
                         </div>
                     </div>
-
 
                     <p className="text-center text-xl font-semibold text-gray-800 mb-1">{selectedProduct.name}</p>
 
@@ -178,19 +198,18 @@ export default function Products({query, categoryId, userId}: Props) {
                                 pattern="[0-9]*"
                                 value={count}
                                 onChange={(e) => {
-                                    const val = e.target.value.replace(/\D/g, ''); // 🔍 faqat raqamlarni qoldiramiz
+                                    const val = e.target.value.replace(/\D/g, '');
                                     setCount(Math.max(1, parseInt(val) || 1));
                                 }}
                                 className="w-14 text-center border border-gray-300 rounded px-1 py-1 text-md font-medium text-gray-800"
                             />
-
                             <button onClick={() => setCount(count + 1)}
                                     className="bg-gray-200 w-9 h-9 rounded-full text-xl font-bold text-gray-800 hover:bg-gray-300">+
                             </button>
                         </div>
                         <span className="text-yellow-600 text-lg font-bold">
-              {selectedProduct.price * count} {"so‘m"}
-            </span>
+                            {selectedProduct.price * count} {"so‘m"}
+                        </span>
                     </div>
 
                     <div className="mb-6">

@@ -40,6 +40,9 @@ export default function CategoryFilter({ onSelectCategory }: Props) {
 
     return (
         <div className="mt-1 px-4 pb-2 overflow-x-auto scrollbar-hide">
+            <div>
+                <h1 className={'text-center text-2xl font-bold p-1 text-yellow-500'}>Bulimlar</h1>
+            </div>
             <div className="flex mt-2 gap-4 w-max">
                 {categories.map((cat) => {
                     const isActive = activeId === cat._id;
