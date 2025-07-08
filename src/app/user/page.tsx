@@ -50,7 +50,7 @@ export default function UserPage() {
             const res = await axios.get(`${BASE_URL}${APP_API.user}/${id}`);
             setUser({name: res.data.name, phone: res.data.phone});
             setEditableUser({name: res.data.name, phone: res.data.phone});
-        } catch (err) {
+        } catch {
             toast.error("Ma'lumotlarni olib bo'lmadi");
         } finally {
             setLoading(false);
@@ -60,7 +60,9 @@ export default function UserPage() {
     const fetchOrders = async (id: string) => {
         try {
             const res = await axios.get(`${BASE_URL}/order/getAllOrders`);
-            const filtered = res.data.orders.filter((o: any) => o.user_id._id === id);
+            const filtered = res.data.orders.filter((o: OrderItem & {
+                user_id: { _id: string }
+            }) => o.user_id._id === id);
             setUserOrders(filtered);
         } catch {
             toast.error('Buyurtmalarni olishda xatolik');
@@ -70,9 +72,9 @@ export default function UserPage() {
     const fetchOrderHistory = async (id: string) => {
         try {
             const res = await axios.get(`${BASE_URL}/order/history/${id}`);
-            const mapped = res.data.history.map((h: any) => h.order_id);
+            const mapped = res.data.history.map((h: { order_id: OrderItem }) => h.order_id);
             setOrderHistory(mapped);
-        } catch (err) {
+        } catch {
             toast.error('Tarixni olishda xatolik');
         }
     };
