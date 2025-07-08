@@ -8,12 +8,10 @@ import {Toaster} from "react-hot-toast";
 import CategoryFilter from "@/components/category";
 import Footer from "@/components/Footer";
 import {useUserId} from "@/hooks/useUserId";
-import SkeletonSearch from "@/components/SkeletonSearch";
 
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
     const userId = useUserId();
 
     if (!userId) {
@@ -28,13 +26,7 @@ export default function Page() {
         <div className="bg-[#FAFAF5] min-h-screen">
             <Navbar/>
             <Toaster position="top-center" reverseOrder={false}/>
-            {
-                loading ? (
-                    <SkeletonSearch/>
-                ) : (
-                    <Search onSearch={setSearchQuery}/>
-                )
-            }
+            <Search onSearch={setSearchQuery}/>
             <CategoryFilter onSelectCategory={(id) => {
                 setCategoryId(id);
                 setSearchQuery('');

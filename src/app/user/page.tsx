@@ -5,17 +5,34 @@ import axios from 'axios';
 import {BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import toast from 'react-hot-toast';
-import {useUserId} from "@/hooks/useUserId";
-import Loading from "@/components/Loading";
+import {useUserId} from '@/hooks/useUserId';
+import Loading from '@/components/Loading';
 
 interface User {
     name: string;
     phone: string;
 }
 
+interface OrderItem {
+    _id: string;
+    products: {
+        product_id: {
+            name: string;
+            price: number;
+        };
+        count: number;
+    }[];
+    status: string;
+    total_price: number;
+    createdAt: string;
+    cancel_reason?: string;
+}
+
 export default function UserPage() {
     const [user, setUser] = useState<User>({name: '', phone: ''});
     const [editableUser, setEditableUser] = useState<User>({name: '', phone: ''});
+    const [userOrders, setUserOrders] = useState<OrderItem[]>([]);
+    const [orderHistory, setOrderHistory] = useState<OrderItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
     const userId = useUserId();
@@ -23,6 +40,8 @@ export default function UserPage() {
     useEffect(() => {
         if (userId) {
             fetchUser(userId);
+            fetchOrders(userId);
+            fetchOrderHistory(userId);
         }
     }, [userId]);
 
@@ -32,10 +51,29 @@ export default function UserPage() {
             setUser({name: res.data.name, phone: res.data.phone});
             setEditableUser({name: res.data.name, phone: res.data.phone});
         } catch (err) {
-            console.error('Foydalanuvchini olishda xatolik:', err);
             toast.error("Ma'lumotlarni olib bo'lmadi");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchOrders = async (id: string) => {
+        try {
+            const res = await axios.get(`${BASE_URL}/order/getAllOrders`);
+            const filtered = res.data.orders.filter((o: any) => o.user_id._id === id);
+            setUserOrders(filtered);
+        } catch {
+            toast.error('Buyurtmalarni olishda xatolik');
+        }
+    };
+
+    const fetchOrderHistory = async (id: string) => {
+        try {
+            const res = await axios.get(`${BASE_URL}/order/history/${id}`);
+            const mapped = res.data.history.map((h: any) => h.order_id);
+            setOrderHistory(mapped);
+        } catch (err) {
+            toast.error('Tarixni olishda xatolik');
         }
     };
 
@@ -44,33 +82,30 @@ export default function UserPage() {
         try {
             await axios.put(`${BASE_URL}${APP_API.user}/${userId}`, editableUser);
             toast.success("Ma'lumotlar yangilandi");
-            setUser(editableUser); // backenddan qayta olish shart emas
+            setUser(editableUser);
             setEditing(false);
-        } catch (err) {
-            console.error('Yangilash xatoligi:', err);
+        } catch {
             toast.error("Xatolik yuz berdi");
         }
     };
 
     const handleCancel = () => {
-        setEditableUser(user); // avvalgi qiymatlarni tiklash
+        setEditableUser(user);
         setEditing(false);
     };
 
     if (loading) {
         return (
-                <div className="flex  justify-center items-center h-screen">
-                    <Loading/>
-                </div>
-
+            <div className="flex justify-center items-center h-screen">
+                <Loading/>
+            </div>
         );
     }
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
-            <div className="w-full max-w-md bg-white shadow-md rounded-xl p-6 space-y-4">
-                <h2 className="text-2xl font-bold text-yellow-700 text-center">{'Sizning ma’lumotingiz'}</h2>
-
+        <div className="flex flex-col items-center min-h-screen bg-gray-50 px-4 py-6">
+            <div className="w-full max-w-md bg-white shadow-md rounded-xl p-6 space-y-4 mb-8">
+                <h2 className="text-2xl font-bold text-yellow-700 text-center">Sizning ma’lumotingiz</h2>
                 <div className="space-y-3">
                     <div>
                         <label className="text-sm text-gray-700 block mb-1">Ismingiz</label>
@@ -95,32 +130,72 @@ export default function UserPage() {
                         />
                     </div>
                 </div>
-
                 <div className="flex justify-end gap-3 mt-4">
                     {editing ? (
                         <>
-                            <button
-                                onClick={handleCancel}
-                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm"
-                            >
+                            <button onClick={handleCancel}
+                                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">
                                 Bekor qilish
                             </button>
-                            <button
-                                onClick={updateUser}
-                                className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm"
-                            >
+                            <button onClick={updateUser}
+                                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm">
                                 Saqlash
                             </button>
                         </>
                     ) : (
-                        <button
-                            onClick={() => setEditing(true)}
-                            className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm"
-                        >
+                        <button onClick={() => setEditing(true)}
+                                className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm">
                             Yangilash
                         </button>
                     )}
                 </div>
+            </div>
+
+            <div className="w-full max-w-md bg-white shadow-md rounded-xl p-4 mb-6">
+                <h3 className="text-lg font-bold text-yellow-600 mb-3">Buyurtmalar</h3>
+                {userOrders.length === 0 ? (
+                    <p className="text-gray-600 text-sm">Sizda hali hech qanday buyurtma mavjud emas.</p>
+                ) : (
+                    userOrders.map((order) => (
+                        <div key={order._id} className="border-b py-2">
+                            <p className="text-sm font-semibold text-gray-700">📦 {order.total_price} so‘m</p>
+                            {order.products.map((p, i) => (
+                                <p key={i} className="text-sm text-gray-600">{p.product_id.name} × {p.count}</p>
+                            ))}
+                            <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
+                            <span className={`text-xs font-semibold inline-block mt-1 px-2 py-1 rounded ${{
+                                'YUBORILDI': 'bg-blue-100 text-blue-700',
+                                'BEKOR QILINDI': 'bg-red-100 text-red-700',
+                                'FOYDALANUVCHI QABUL QILDI': 'bg-green-100 text-green-700'
+                            }[order.status] || 'bg-gray-100 text-gray-700'}`}>{order.status}</span>
+                            {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
+                                <div className="text-xs text-red-500">📝 Sabab: {order.cancel_reason}</div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+
+            <div className="w-full max-w-md bg-white shadow-md rounded-xl p-4">
+                <h3 className="text-lg font-bold text-yellow-600 mb-3">Buyurtma Tarixi</h3>
+                {orderHistory.length === 0 ? (
+                    <p className="text-gray-600 text-sm">Hali hech qanday tarix mavjud emas.</p>
+                ) : (
+                    orderHistory.map((order) => (
+                        <div key={order._id} className="border-b py-2">
+                            <p className="text-sm font-semibold text-gray-700">📦 {order.total_price} so‘m</p>
+                            {order.products.map((p, i) => (
+                                <p key={i} className="text-sm text-gray-600">{p.product_id.name} × {p.count}</p>
+                            ))}
+                            <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
+                            <span className={`text-xs font-semibold inline-block mt-1 px-2 py-1 rounded ${{
+                                'YUBORILDI': 'bg-blue-100 text-blue-700',
+                                'BEKOR QILINDI': 'bg-red-100 text-red-700',
+                                'FOYDALANUVCHI QABUL QILDI': 'bg-green-100 text-green-700'
+                            }[order.status] || 'bg-gray-100 text-gray-700'}`}>{order.status}</span>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
