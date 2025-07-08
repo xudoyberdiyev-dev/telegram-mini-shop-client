@@ -59,25 +59,39 @@ export default function UserPage() {
 
     const fetchOrders = async (id: string) => {
         try {
-            const res = await axios.get(`${BASE_URL}/order/getAllOrders`);
-            const filtered = res.data.orders.filter((o: OrderItem & {
-                user_id: { _id: string }
-            }) => o.user_id._id === id);
-            setUserOrders(filtered);
+            const res = await axios.get(`${BASE_URL}/order/user/${id}`);
+            setUserOrders(res.data.orders);
         } catch {
             toast.error('Buyurtmalarni olishda xatolik');
         }
     };
 
+
     const fetchOrderHistory = async (id: string) => {
         try {
             const res = await axios.get(`${BASE_URL}/order/history/${id}`);
-            const mapped = res.data.history.map((h: { order_id: OrderItem }) => h.order_id);
+            const rawHistory = res?.data?.history || [];
+
+            const mapped = rawHistory.map((h: {
+                order_id: OrderItem,
+                status: string,
+                cancel_reason?: string
+            }) => {
+                if (!h.order_id) return null; // agar order_id null bo‘lsa o‘tkazib yubor
+                return {
+                    ...h.order_id,
+                    status: h.status,
+                    cancel_reason: h.cancel_reason
+                };
+            }).filter(Boolean); // null bo‘lganlarni o‘chir
+
             setOrderHistory(mapped);
         } catch {
             toast.error('Tarixni olishda xatolik');
+            setOrderHistory([]);
         }
     };
+
 
     const updateUser = async () => {
         if (!userId) return;
@@ -178,27 +192,29 @@ export default function UserPage() {
                 )}
             </div>
 
-            <div className="w-full max-w-md bg-white shadow-md rounded-xl p-4">
-                <h3 className="text-lg font-bold text-yellow-600 mb-3">Buyurtma Tarixi</h3>
-                {orderHistory.length === 0 ? (
-                    <p className="text-gray-600 text-sm">Hali hech qanday tarix mavjud emas.</p>
-                ) : (
-                    orderHistory.map((order) => (
-                        <div key={order._id} className="border-b py-2">
-                            <p className="text-sm font-semibold text-gray-700">📦 {order.total_price} so‘m</p>
-                            {order.products.map((p, i) => (
-                                <p key={i} className="text-sm text-gray-600">{p.product_id.name} × {p.count}</p>
-                            ))}
-                            <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
-                            <span className={`text-xs font-semibold inline-block mt-1 px-2 py-1 rounded ${{
-                                'YUBORILDI': 'bg-blue-100 text-blue-700',
-                                'BEKOR QILINDI': 'bg-red-100 text-red-700',
-                                'FOYDALANUVCHI QABUL QILDI': 'bg-green-100 text-green-700'
-                            }[order.status] || 'bg-gray-100 text-gray-700'}`}>{order.status}</span>
-                        </div>
-                    ))
-                )}
-            </div>
+            <h3 className="text-lg font-bold text-yellow-600 mb-3">Buyurtma Tarixi</h3>
+            {orderHistory.length === 0 ? (
+                <p className="text-gray-600 text-sm">Hali hech qanday tarix mavjud emas.</p>
+            ) : (
+                orderHistory.map((order) => (
+                    <div key={order._id} className="border-b py-2">
+                        <p className="text-sm font-semibold text-gray-700">📦 {order.total_price} so‘m</p>
+                        {order.products.map((p, i) => (
+                            <p key={i} className="text-sm text-gray-600">{p.product_id.name} × {p.count}</p>
+                        ))}
+                        <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
+                        <span className={`text-xs font-semibold inline-block mt-1 px-2 py-1 rounded ${{
+                            'YUBORILDI': 'bg-blue-100 text-blue-700',
+                            'BEKOR QILINDI': 'bg-red-100 text-red-700',
+                            'FOYDALANUVCHI QABUL QILDI': 'bg-green-100 text-green-700'
+                        }[order.status] || 'bg-gray-100 text-gray-700'}`}>{order.status}</span>
+
+                        {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
+                            <div className="text-xs text-red-500">📝 Sabab: {order.cancel_reason}</div>
+                        )}
+                    </div>
+                ))
+            )}
         </div>
     );
 }
