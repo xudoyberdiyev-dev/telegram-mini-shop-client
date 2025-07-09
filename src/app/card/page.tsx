@@ -197,14 +197,12 @@ export default function BasketPage() {
                             </>
                         )}
 
-                        {/* ORDERLAR */}
-                        {userOrders.length > 0 && (
+                        {items.length === 0 && userOrders.length > 0 && (
                             <div className="w-full max-w-3xl bg-white shadow rounded-xl p-6 mb-8">
                                 <h3 className="text-xl font-bold text-yellow-600 mb-5">📋 Buyurtmalar</h3>
                                 <div className="space-y-4">
                                     {userOrders.map((order) => (
-                                        <div key={order._id}
-                                             className="p-4 border border-gray-200 rounded-xl shadow-sm">
+                                        <div key={order._id} className="p-4 border border-gray-200 rounded-xl shadow-sm">
                                             <div className="flex justify-between items-center mb-2">
                                                 <p className="text-md font-semibold text-gray-800">📦 {order.total_price} so‘m</p>
                                                 <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
@@ -224,14 +222,14 @@ export default function BasketPage() {
                                             </div>
                                             <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
                                             {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
-                                                <p className="text-xs text-red-500 mt-1">📝
-                                                    Sabab: {order.cancel_reason}</p>
+                                                <p className="text-xs text-red-500 mt-1">📝 Sabab: {order.cancel_reason}</p>
                                             )}
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         )}
+
 
                         {/* BUYURTMA QILISH */}
                         {!hasActiveOrder && items.length > 0 && (
