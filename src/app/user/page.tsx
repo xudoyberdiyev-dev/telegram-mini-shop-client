@@ -39,9 +39,10 @@ export default function UserPage() {
     useEffect(() => {
         if (userId) {
             fetchUser(userId);
-            fetchOrderHistory(userId);
+            fetchOrderHistory(userId); // <-- faqat tarix uchun
         }
     }, [userId]);
+
 
     const fetchUser = async (id: string) => {
         try {

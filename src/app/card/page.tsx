@@ -11,6 +11,7 @@ import {useCartStore} from '@/utils/cartStore';
 import Link from "next/link";
 import {useUserId} from "@/hooks/useUserId";
 import toast from "react-hot-toast";
+import Loading from "@/components/Loading";
 
 interface BasketItem {
     _id: string;
@@ -51,6 +52,8 @@ export default function BasketPage() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showInput, setShowInput] = useState(false);
+    const [loadingAll, setLoadingAll] = useState(true); // ✅ Yangi: umumiy loading holat
+
     const {setCartCount} = useCartStore();
 
     const fetchBasket = useCallback(async () => {
@@ -68,12 +71,14 @@ export default function BasketPage() {
 
     const fetchOrders = async () => {
         try {
+            if (!userId) return;
             const res = await axios.get(`${BASE_URL}/order/user/${userId}`);
             setUserOrders(res.data.orders || []);
         } catch {
             toast.error('Buyurtmalarni olishda xatolik');
         }
     };
+
 
     const handleCountChange = async (basketId: string, newCount: number) => {
         try {
@@ -113,10 +118,21 @@ export default function BasketPage() {
     useEffect(() => {
         if (userId) {
             fetchBasket().then((count) => {
-                if (count === 0) fetchOrders();
+                if (count === 0) {
+                    fetchOrders().finally(() => setLoadingAll(false)); // ✅
+                } else {
+                    setLoadingAll(false); // ✅
+                }
             });
+        } else {
+            setLoadingAll(false); // ✅
         }
     }, [userId]);
+    if (loadingAll) {
+        return (
+            <Loading/>
+        );
+    }
 
     return (
         <div className="bg-[#FAFAF5] min-h-screen">
@@ -126,28 +142,41 @@ export default function BasketPage() {
                     <>
                         <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Sizning savatingiz</h2>
                         {items.map(item => (
-                            <div key={item._id} className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3">
+                            <div key={item._id}
+                                 className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3">
                                 <div className="w-[90px] h-[100px] flex items-center justify-center overflow-hidden">
-                                    <Image src={item.product.image} alt={item.product.name} width={90} height={100} className="rounded-lg object-contain"/>
+                                    <Image src={item.product.image} alt={item.product.name} width={90} height={100}
+                                           className="rounded-lg object-contain"/>
                                 </div>
                                 <div className="flex-1 flex flex-col justify-between text-sm">
                                     <p className="font-semibold text-gray-900 leading-tight mb-1">{item.product.name}</p>
                                     <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
                                     <div className="flex items-center justify-between mt-2">
-                                        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                                            <button onClick={() => handleCountChange(item._id, item.count - 1)} className="px-2 text-lg text-gray-700 hover:bg-gray-200">−</button>
-                                            <input type="text" inputMode="numeric" pattern="[0-9]*" value={item.count}
-                                                   onChange={(e) => {
-                                                       const value = e.target.value.replace(/\D/g, '');
-                                                       if (value === '') return;
-                                                       const parsed = parseInt(value);
-                                                       if (!isNaN(parsed)) handleCountChange(item._id, parsed);
-                                                   }}
-                                                   className="w-12 text-center text-sm border-x border-gray-200 outline-none"
+                                        <div
+                                            className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                            <button onClick={() => handleCountChange(item._id, item.count - 1)}
+                                                    className="px-2 text-lg text-gray-700 hover:bg-gray-200">−
+                                            </button>
+                                            <input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="[0-9]*"
+                                                defaultValue={item.count}
+                                                onBlur={(e) => {
+                                                    const val = e.target.value.replace(/\D/g, '');
+                                                    const parsed = parseInt(val);
+                                                    const newCount = isNaN(parsed) || parsed < 1 ? 1 : parsed;
+                                                    handleCountChange(item._id, newCount);
+                                                }}
+                                                className="w-12 text-center text-sm border-x border-gray-200 outline-none"
                                             />
-                                            <button onClick={() => handleCountChange(item._id, item.count + 1)} className="px-2 text-lg text-gray-700 hover:bg-gray-200">+</button>
+
+                                            <button onClick={() => handleCountChange(item._id, item.count + 1)}
+                                                    className="px-2 text-lg text-gray-700 hover:bg-gray-200">+
+                                            </button>
                                         </div>
-                                        <button onClick={() => handleDelete(item._id)} className="text-gray-400 hover:text-red-600">
+                                        <button onClick={() => handleDelete(item._id)}
+                                                className="text-gray-400 hover:text-red-600">
                                             <FiTrash2 className="text-lg"/>
                                         </button>
                                     </div>
@@ -165,10 +194,12 @@ export default function BasketPage() {
                                     </button>
                                 ) : (
                                     <>
-                                        <p className="mb-3 text-gray-700 font-medium">Rostdan ham buyurtma bermoqchimisiz?</p>
+                                        <p className="mb-3 text-gray-700 font-medium">Rostdan ham buyurtma
+                                            bermoqchimisiz?</p>
                                         <div className="flex justify-between items-center gap-2">
                                             <span className="text-gray-700 font-medium whitespace-nowrap">Umumiy narx:
-                                                <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
+                                                <span
+                                                    className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
                                             </span>
                                             <button onClick={makeOrder} disabled={loading}
                                                     className={`flex-1 py-3 rounded-lg text-white font-semibold transition text-center ${loading ? 'bg-gray-400' : 'bg-yellow-600 hover:bg-yellow-700'}`}>
@@ -191,7 +222,7 @@ export default function BasketPage() {
                                         <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
                                             order.status === 'YUBORILDI' ? 'bg-blue-100 text-blue-700' :
                                                 order.status === 'BEKOR QILINDI' ? 'bg-red-100 text-red-700' :
-                                                    order.status === 'FOYDALANUVCHI QABUL QILDI' ? 'bg-green-100 text-green-700' :
+                                                    order.status === 'HARIDOR QABUL QILDI' ? 'bg-green-100 text-green-700' :
                                                         'bg-gray-100 text-gray-700'
                                         }`}>{order.status}</span>
                                     </div>
@@ -216,7 +247,8 @@ export default function BasketPage() {
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">{"Sizning savatingiz bo'sh"}</h2>
                             <p className="text-gray-600 text-sm mb-4">{"Savatingizni mahsulotlar bilan to‘ldiring"}</p>
-                            <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
+                            <button
+                                className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
                             </button>
                         </div>
