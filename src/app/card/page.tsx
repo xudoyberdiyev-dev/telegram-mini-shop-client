@@ -96,6 +96,7 @@ export default function BasketPage() {
 
     const makeOrder = async () => {
         try {
+            if (!userId) return;
             setLoading(true);
             const res = await axios.post(`${BASE_URL}/order/makeOrder`, {
                 user_id: userId,
@@ -158,7 +159,8 @@ export default function BasketPage() {
                                     <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
 
                                     <div className="flex items-center justify-between mt-2">
-                                        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                        <div
+                                            className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                                             <button
                                                 onClick={() => handleCountChange(item._id, item.count - 1)}
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200"
@@ -204,7 +206,8 @@ export default function BasketPage() {
                                 <h3 className="text-xl font-bold text-yellow-600 mb-5">📋 Buyurtmalar</h3>
                                 <div className="space-y-4">
                                     {userOrders.map((order) => (
-                                        <div key={order._id} className="p-4 border border-gray-200 rounded-xl shadow-sm">
+                                        <div key={order._id}
+                                             className="p-4 border border-gray-200 rounded-xl shadow-sm">
                                             <div className="flex justify-between items-center mb-2">
                                                 <p className="text-md font-semibold text-gray-800">📦 {order.total_price} so‘m</p>
                                                 <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
@@ -226,7 +229,8 @@ export default function BasketPage() {
                                             </div>
                                             <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
                                             {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
-                                                <p className="text-xs text-red-500 mt-1">📝 Sabab: {order.cancel_reason}</p>
+                                                <p className="text-xs text-red-500 mt-1">📝
+                                                    Sabab: {order.cancel_reason}</p>
                                             )}
                                         </div>
                                     ))}
@@ -235,7 +239,8 @@ export default function BasketPage() {
                         )}
 
                         {!hasActiveOrder && (
-                            <div className="sticky bottom-0  rounded-xl bg-white border-t border-gray-200 shadow-md p-4">
+                            <div
+                                className="sticky bottom-0  rounded-xl bg-white border-t border-gray-200 shadow-md p-4">
                                 {!showInput ? (
                                     <button
                                         onClick={() => setShowInput(true)}
@@ -251,7 +256,8 @@ export default function BasketPage() {
                                         <div className="flex justify-between items-center gap-2">
                                             <span className="text-gray-700 font-medium whitespace-nowrap">
                                                 Umumiy narx:
-                                                <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
+                                                <span
+                                                    className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
                                             </span>
                                             <button
                                                 onClick={makeOrder}
@@ -273,7 +279,8 @@ export default function BasketPage() {
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">{"Sizning savatingiz bo'sh"}</h2>
                             <p className="text-gray-600 text-sm mb-4">{"Savatingizni mahsulotlar bilan to‘ldiring"}</p>
-                            <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
+                            <button
+                                className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
                             </button>
                         </div>
