@@ -196,13 +196,21 @@ export default function Products({query, categoryId, userId}: Props) {
                                 type="text"
                                 inputMode="numeric"
                                 pattern="[0-9]*"
-                                value={count}
+                                value={count === 0 ? '' : count}
                                 onChange={(e) => {
                                     const val = e.target.value.replace(/\D/g, '');
-                                    setCount(Math.max(1, parseInt(val) || 1));
+                                    if (val === '') {
+                                        setCount(0);
+                                    } else {
+                                        setCount(parseInt(val));
+                                    }
+                                }}
+                                onBlur={() => {
+                                    if (count < 1) setCount(1); // inputdan chiqishda kamida 1 bo‘lsin
                                 }}
                                 className="w-14 text-center border border-gray-300 rounded px-1 py-1 text-md font-medium text-gray-800"
                             />
+
                             <button onClick={() => setCount(count + 1)}
                                     className="bg-gray-200 w-9 h-9 rounded-full text-xl font-bold text-gray-800 hover:bg-gray-300">+
                             </button>

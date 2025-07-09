@@ -31,7 +31,6 @@ interface OrderItem {
 export default function UserPage() {
     const [user, setUser] = useState<User>({name: '', phone: ''});
     const [editableUser, setEditableUser] = useState<User>({name: '', phone: ''});
-    const [userOrders, setUserOrders] = useState<OrderItem[]>([]);
     const [orderHistory, setOrderHistory] = useState<OrderItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(false);
@@ -40,7 +39,6 @@ export default function UserPage() {
     useEffect(() => {
         if (userId) {
             fetchUser(userId);
-            fetchOrders(userId);
             fetchOrderHistory(userId);
         }
     }, [userId]);
@@ -54,15 +52,6 @@ export default function UserPage() {
             toast.error("Ma'lumotlarni olib bo'lmadi");
         } finally {
             setLoading(false);
-        }
-    };
-
-    const fetchOrders = async (id: string) => {
-        try {
-            const res = await axios.get(`${BASE_URL}/order/user/${id}`);
-            setUserOrders(res.data.orders);
-        } catch {
-            toast.error('Buyurtmalarni olishda xatolik');
         }
     };
 
@@ -167,44 +156,8 @@ export default function UserPage() {
                 </div>
             </div>
 
-            <div className="w-full max-w-3xl bg-white shadow rounded-xl p-6 mb-8">
-                <h3 className="text-xl font-bold text-yellow-600 mb-5">📋 Buyurtmalar</h3>
-                {userOrders.length === 0 ? (
-                    <p className="text-gray-600 text-sm">Sizda hali hech qanday buyurtma mavjud emas.</p>
-                ) : (
-                    <div className="space-y-4">
-                        {userOrders.map((order) => (
-                            <div key={order._id} className="p-4 border border-gray-200 rounded-xl shadow-sm">
-                                <div className="flex justify-between items-center mb-2">
-                                    <p className="text-md font-semibold text-gray-800">📦 {order.total_price} so‘m</p>
-                                    <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                                        order.status === 'YUBORILDI' ? 'bg-blue-100 text-blue-700' :
-                                            order.status === 'BEKOR QILINDI' ? 'bg-red-100 text-red-700' :
-                                                order.status === 'FOYDALANUVCHI QABUL QILDI' ? 'bg-green-100 text-green-700' :
-                                                    'bg-gray-100 text-gray-700'
-                                    }`}>
-                            {order.status}
-                        </span>
-                                </div>
-                                <div className="text-sm text-gray-600 mb-2">
-                                    {order.products.map((p, i) => (
-                                        <div key={i} className="flex justify-between">
-                                            <span>{p.product_id.name}</span>
-                                            <span>× {p.count}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
-                                {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
-                                    <p className="text-xs text-red-500 mt-1">📝 Sabab: {order.cancel_reason}</p>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
 
-            <div className="w-full  max-w-3xl bg-white shadow rounded-xl p-6 mb-8">
+            <div className="w-full max-w-3xl bg-white shadow rounded-xl p-6 mb-8 max-h-[500px] overflow-y-auto">
                 <h3 className="text-xl font-bold text-yellow-600 mb-5">📜 Buyurtma Tarixi</h3>
                 {orderHistory.length === 0 ? (
                     <p className="text-gray-600 text-sm">Hali hech qanday tarix mavjud emas.</p>
@@ -240,6 +193,7 @@ export default function UserPage() {
                     </div>
                 )}
             </div>
+
 
         </div>
     );
