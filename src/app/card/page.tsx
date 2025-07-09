@@ -52,15 +52,16 @@ export default function BasketPage() {
     const [loading, setLoading] = useState(false);
     const [showInput, setShowInput] = useState(false);
     const {setCartCount} = useCartStore();
-
     const fetchBasket = useCallback(async () => {
         try {
             const response = await axios.get<BasketResponse>(`${BASE_URL}${APP_API.basket}/${userId}`);
             setItems(response.data.products);
             setTotalPrice(response.data.totalPrice);
             setCartCount(response.data.products.length);
+            return response.data;
         } catch {
             alert('Savatni olishda xatolik yuz berdi');
+            return null;
         }
     }, [userId, setCartCount]);
 
@@ -118,10 +119,13 @@ export default function BasketPage() {
 
     useEffect(() => {
         if (userId) {
-            fetchBasket();
-            fetchOrders(userId);
+            fetchBasket().then((res) => {
+                if (res && res.products.length === 0) {
+                    fetchOrders(userId);
+                }
+            });
         }
-    }, [userId, fetchBasket]);
+    }, [userId]);
 
     const historyOrders = userOrders.filter(order =>
         ['FOYDALANUVCHI QABUL QILDI', 'BEKOR QILINDI'].includes(order.status)
@@ -153,27 +157,39 @@ export default function BasketPage() {
                             <>
                                 <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Sizning savatingiz</h2>
                                 {items.map((item) => (
-                                    <div key={item._id} className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3">
-                                        <div className="w-[90px] h-[100px] flex items-center justify-center overflow-hidden">
-                                            <Image src={item.product.image} alt={item.product.name} width={90} height={100} className="rounded-lg object-contain" />
+                                    <div key={item._id}
+                                         className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3">
+                                        <div
+                                            className="w-[90px] h-[100px] flex items-center justify-center overflow-hidden">
+                                            <Image src={item.product.image} alt={item.product.name} width={90}
+                                                   height={100} className="rounded-lg object-contain"/>
                                         </div>
                                         <div className="flex-1 flex flex-col justify-between text-sm">
                                             <p className="font-semibold text-gray-900 leading-tight mb-1">{item.product.name}</p>
                                             <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
                                             <div className="flex items-center justify-between mt-2">
-                                                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                                                    <button onClick={() => handleCountChange(item._id, item.count - 1)} className="px-2 text-lg text-gray-700 hover:bg-gray-200">−</button>
-                                                    <input type="text" inputMode="numeric" pattern="[0-9]*" value={item.count} onChange={(e) => {
+                                                <div
+                                                    className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                                    <button onClick={() => handleCountChange(item._id, item.count - 1)}
+                                                            className="px-2 text-lg text-gray-700 hover:bg-gray-200">−
+                                                    </button>
+                                                    <input type="text" inputMode="numeric" pattern="[0-9]*"
+                                                           value={item.count} onChange={(e) => {
                                                         const value = e.target.value.replace(/\D/g, '');
                                                         if (value === '') return;
                                                         const parsed = parseInt(value);
                                                         if (!isNaN(parsed)) {
                                                             handleCountChange(item._id, parsed);
                                                         }
-                                                    }} className="w-12 text-center text-sm border-x border-gray-200 outline-none" />
-                                                    <button onClick={() => handleCountChange(item._id, item.count + 1)} className="px-2 text-lg text-gray-700 hover:bg-gray-200">+</button>
+                                                    }}
+                                                           className="w-12 text-center text-sm border-x border-gray-200 outline-none"/>
+                                                    <button onClick={() => handleCountChange(item._id, item.count + 1)}
+                                                            className="px-2 text-lg text-gray-700 hover:bg-gray-200">+
+                                                    </button>
                                                 </div>
-                                                <button onClick={() => handleDelete(item._id)} className="text-gray-400 hover:text-red-600"><FiTrash2 className="text-lg"/></button>
+                                                <button onClick={() => handleDelete(item._id)}
+                                                        className="text-gray-400 hover:text-red-600"><FiTrash2
+                                                    className="text-lg"/></button>
                                             </div>
                                         </div>
                                     </div>
@@ -187,7 +203,8 @@ export default function BasketPage() {
                                 <h3 className="text-xl font-bold text-yellow-600 mb-5">📋 Buyurtmalar</h3>
                                 <div className="space-y-4">
                                     {userOrders.map((order) => (
-                                        <div key={order._id} className="p-4 border border-gray-200 rounded-xl shadow-sm">
+                                        <div key={order._id}
+                                             className="p-4 border border-gray-200 rounded-xl shadow-sm">
                                             <div className="flex justify-between items-center mb-2">
                                                 <p className="text-md font-semibold text-gray-800">📦 {order.total_price} so‘m</p>
                                                 <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
@@ -207,7 +224,8 @@ export default function BasketPage() {
                                             </div>
                                             <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
                                             {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
-                                                <p className="text-xs text-red-500 mt-1">📝 Sabab: {order.cancel_reason}</p>
+                                                <p className="text-xs text-red-500 mt-1">📝
+                                                    Sabab: {order.cancel_reason}</p>
                                             )}
                                         </div>
                                     ))}
@@ -219,13 +237,19 @@ export default function BasketPage() {
                         {!hasActiveOrder && items.length > 0 && (
                             <div className="sticky bottom-0 rounded-xl bg-white border-t border-gray-200 shadow-md p-4">
                                 {!showInput ? (
-                                    <button onClick={() => setShowInput(true)} className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 px-6 rounded-lg">Buyurtma qilish</button>
+                                    <button onClick={() => setShowInput(true)}
+                                            className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 px-6 rounded-lg">Buyurtma
+                                        qilish</button>
                                 ) : (
                                     <>
-                                        <p className="mb-3 text-gray-700 font-medium">Rostdan ham buyurtma bermoqchimisiz?</p>
+                                        <p className="mb-3 text-gray-700 font-medium">Rostdan ham buyurtma
+                                            bermoqchimisiz?</p>
                                         <div className="flex justify-between items-center gap-2">
-                                            <span className="text-gray-700 font-medium whitespace-nowrap">Umumiy narx: <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span></span>
-                                            <button onClick={makeOrder} disabled={loading} className={`flex-1 py-3 rounded-lg text-white font-semibold transition text-center ${loading ? 'bg-gray-400' : 'bg-yellow-600 hover:bg-yellow-700'}`}>{loading ? 'Yuborilmoqda...' : 'Rasmiylashtirish'}</button>
+                                            <span
+                                                className="text-gray-700 font-medium whitespace-nowrap">Umumiy narx: <span
+                                                className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span></span>
+                                            <button onClick={makeOrder} disabled={loading}
+                                                    className={`flex-1 py-3 rounded-lg text-white font-semibold transition text-center ${loading ? 'bg-gray-400' : 'bg-yellow-600 hover:bg-yellow-700'}`}>{loading ? 'Yuborilmoqda...' : 'Rasmiylashtirish'}</button>
                                         </div>
                                     </>
                                 )}
@@ -237,7 +261,8 @@ export default function BasketPage() {
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">{"Sizning savatingiz bo'sh"}</h2>
                             <p className="text-gray-600 text-sm mb-4">{"Savatingizni mahsulotlar bilan to‘ldiring"}</p>
-                            <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
+                            <button
+                                className="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-lg">
                                 <Link href="/">Xarid qilish</Link>
                             </button>
                         </div>
