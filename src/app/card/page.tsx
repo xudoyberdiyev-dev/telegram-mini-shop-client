@@ -61,7 +61,6 @@ export default function BasketPage() {
         try {
             const res = await axios.get<BasketResponse>(`${BASE_URL}${APP_API.basket}/${userId}`);
             setItems(res.data.products);
-            setTotalPrice(res.data.totalPrice);
             setCartCount(res.data.products.length);
 
             const initialCounts: { [key: string]: number } = {};
@@ -77,7 +76,6 @@ export default function BasketPage() {
         }
     }, [userId, setCartCount]);
 
-
     const fetchOrders = async () => {
         try {
             if (!userId) return;
@@ -88,7 +86,6 @@ export default function BasketPage() {
         }
     };
 
-
     const handleCountChange = async (basketId: string, newCount: number) => {
         if (newCount < 1) return;
 
@@ -97,14 +94,26 @@ export default function BasketPage() {
             [basketId]: newCount
         }));
 
+        setItems(prevItems =>
+            prevItems.map(item => {
+                if (item._id === basketId) {
+                    const updatedTotal = item.product.price * newCount;
+                    return {
+                        ...item,
+                        count: newCount,
+                        total_price: updatedTotal
+                    };
+                }
+                return item;
+            })
+        );
+
         try {
             await axios.post(`${BASE_URL}${APP_API.basket}/update-count`, {basketId, newCount});
-            fetchBasket();
         } catch {
             toast.error('Sonni o‘zgartirishda xatolik');
         }
     };
-
 
     const handleDelete = async (id: string) => {
         try {
@@ -145,11 +154,13 @@ export default function BasketPage() {
             setLoadingAll(false);
         }
     }, [userId]);
-    if (loadingAll) {
-        return (
-            <Loading/>
-        );
-    }
+
+    useEffect(() => {
+        const newTotal = items.reduce((acc, item) => acc + item.total_price, 0);
+        setTotalPrice(newTotal);
+    }, [items]);
+
+    if (loadingAll) return <Loading />;
 
     return (
         <div className="bg-[#FAFAF5] min-h-screen">
@@ -169,8 +180,7 @@ export default function BasketPage() {
                                     <p className="font-semibold text-gray-900 leading-tight mb-1">{item.product.name}</p>
                                     <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
                                     <div className="flex items-center justify-between mt-2">
-                                        <div
-                                            className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                                             <button
                                                 onClick={() => handleCountChange(item._id, (counts[item._id] || 1) - 1)}
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200">−
@@ -201,7 +211,6 @@ export default function BasketPage() {
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200">+
                                             </button>
                                         </div>
-
                                         <button onClick={() => handleDelete(item._id)}
                                                 className="text-gray-400 hover:text-red-600">
                                             <FiTrash2 className="text-lg"/>
@@ -224,8 +233,7 @@ export default function BasketPage() {
                                             bermoqchimisiz?</p>
                                         <div className="flex justify-between items-center gap-2">
                                             <span className="text-gray-700 font-medium whitespace-nowrap">Umumiy narx:
-                                                <span
-                                                    className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
+                                                <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
                                             </span>
                                             <button onClick={makeOrder} disabled={loading}
                                                     className={`flex-1 py-3 rounded-lg text-white font-semibold transition text-center ${loading ? 'bg-gray-400' : 'bg-yellow-600 hover:bg-yellow-700'}`}>
