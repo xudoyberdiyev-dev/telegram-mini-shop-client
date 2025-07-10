@@ -3,7 +3,7 @@
 import Search from "@/components/search";
 import Products from "@/components/products";
 import Navbar from "@/components/navbar";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Toaster} from "react-hot-toast";
 import CategoryFilter from "@/components/category";
 import Footer from "@/components/Footer";
@@ -12,12 +12,22 @@ import {useUserId} from "@/hooks/useUserId";
 export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const userId = useUserId();
 
-    if (!userId) {
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+    if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
+                <div
+                    className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
             </div>
         );
     }
