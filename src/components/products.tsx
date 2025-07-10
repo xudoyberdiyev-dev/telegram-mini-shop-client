@@ -28,6 +28,7 @@ export default function Products({query, categoryId, userId}: Props) {
     const [visibleCount, setVisibleCount] = useState(6);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [count, setCount] = useState(1);
+    const [isSaving, setIsSaving] = useState(false);
 
     const {setCartCount} = useCartStore();
 
@@ -36,6 +37,7 @@ export default function Products({query, categoryId, userId}: Props) {
             alert('Foydalanuvchi ID mavjud emas');
             return;
         }
+        setIsSaving(true);
 
         try {
             await axios.post(`${BASE_URL}${APP_API.basket}/add`, {
@@ -54,6 +56,8 @@ export default function Products({query, categoryId, userId}: Props) {
             if (axios.isAxiosError(err)) {
                 console.log(err.response?.data);
             }
+        }finally {
+            setIsSaving(false);
         }
     };
 
@@ -229,9 +233,14 @@ export default function Products({query, categoryId, userId}: Props) {
 
                     <button
                         onClick={() => handleAddToBasket(selectedProduct)}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white w-full py-3 rounded-xl text-base font-semibold shadow-md transition"
+                        disabled={isSaving}
+                        className={`w-full py-3 rounded-xl text-base font-semibold shadow-md transition ${
+                            isSaving
+                                ? 'bg-yellow-400 cursor-not-allowed'
+                                : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                        }`}
                     >
-                        {"Savatga qo‘shish"}
+                        {isSaving ? 'Savatga saqlanmoqda...' : 'Savatga qo‘shish'}
                     </button>
                 </div>
             )}
