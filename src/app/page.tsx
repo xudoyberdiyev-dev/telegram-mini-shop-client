@@ -13,17 +13,19 @@ export default function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isClient, setIsClient] = useState(false);
+
     const userId = useUserId();
 
-
     useEffect(() => {
+        setIsClient(true);
         const timer = setTimeout(() => {
             setIsLoading(false);
         }, 1000);
-
         return () => clearTimeout(timer);
     }, []);
-    if (isLoading) {
+
+    if (!isClient || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
                 <div
