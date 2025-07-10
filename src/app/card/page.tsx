@@ -47,12 +47,13 @@ interface OrderItem {
 
 export default function BasketPage() {
     const userId = useUserId();
+    const [counts, setCounts] = useState<{ [key: string]: number }>({});
     const [items, setItems] = useState<BasketItem[]>([]);
     const [userOrders, setUserOrders] = useState<OrderItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showInput, setShowInput] = useState(false);
-    const [loadingAll, setLoadingAll] = useState(true); // ✅ Yangi: umumiy loading holat
+    const [loadingAll, setLoadingAll] = useState(true);
 
     const {setCartCount} = useCartStore();
 
@@ -62,12 +63,20 @@ export default function BasketPage() {
             setItems(res.data.products);
             setTotalPrice(res.data.totalPrice);
             setCartCount(res.data.products.length);
+
+            const initialCounts: { [key: string]: number } = {};
+            res.data.products.forEach(item => {
+                initialCounts[item._id] = item.count;
+            });
+            setCounts(initialCounts);
+
             return res.data.products.length;
         } catch {
             toast.error('Savatni olishda xatolik');
             return 0;
         }
     }, [userId, setCartCount]);
+
 
     const fetchOrders = async () => {
         try {
@@ -81,6 +90,13 @@ export default function BasketPage() {
 
 
     const handleCountChange = async (basketId: string, newCount: number) => {
+        if (newCount < 1) return;
+
+        setCounts(prev => ({
+            ...prev,
+            [basketId]: newCount
+        }));
+
         try {
             await axios.post(`${BASE_URL}${APP_API.basket}/update-count`, {basketId, newCount});
             fetchBasket();
@@ -88,6 +104,7 @@ export default function BasketPage() {
             toast.error('Sonni o‘zgartirishda xatolik');
         }
     };
+
 
     const handleDelete = async (id: string) => {
         try {
@@ -119,13 +136,13 @@ export default function BasketPage() {
         if (userId) {
             fetchBasket().then((count) => {
                 if (count === 0) {
-                    fetchOrders().finally(() => setLoadingAll(false)); // ✅
+                    fetchOrders().finally(() => setLoadingAll(false));
                 } else {
-                    setLoadingAll(false); // ✅
+                    setLoadingAll(false);
                 }
             });
         } else {
-            setLoadingAll(false); // ✅
+            setLoadingAll(false);
         }
     }, [userId]);
     if (loadingAll) {
@@ -154,27 +171,37 @@ export default function BasketPage() {
                                     <div className="flex items-center justify-between mt-2">
                                         <div
                                             className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                                            <button onClick={() => handleCountChange(item._id, item.count - 1)}
-                                                    className="px-2 text-lg text-gray-700 hover:bg-gray-200">−
+                                            <button
+                                                onClick={() => handleCountChange(item._id, (counts[item._id] || 1) - 1)}
+                                                className="px-2 text-lg text-gray-700 hover:bg-gray-200">−
                                             </button>
                                             <input
                                                 type="text"
                                                 inputMode="numeric"
                                                 pattern="[0-9]*"
-                                                defaultValue={item.count}
+                                                value={counts[item._id]?.toString() || ''}
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    if (/^\d*$/.test(val)) {
+                                                        setCounts(prev => ({
+                                                            ...prev,
+                                                            [item._id]: val === '' ? 0 : parseInt(val)
+                                                        }));
+                                                    }
+                                                }}
                                                 onBlur={(e) => {
-                                                    const val = e.target.value.replace(/\D/g, '');
-                                                    const parsed = parseInt(val);
+                                                    const parsed = parseInt(e.target.value);
                                                     const newCount = isNaN(parsed) || parsed < 1 ? 1 : parsed;
                                                     handleCountChange(item._id, newCount);
                                                 }}
                                                 className="w-12 text-center text-sm border-x border-gray-200 outline-none"
                                             />
-
-                                            <button onClick={() => handleCountChange(item._id, item.count + 1)}
-                                                    className="px-2 text-lg text-gray-700 hover:bg-gray-200">+
+                                            <button
+                                                onClick={() => handleCountChange(item._id, (counts[item._id] || 1) + 1)}
+                                                className="px-2 text-lg text-gray-700 hover:bg-gray-200">+
                                             </button>
                                         </div>
+
                                         <button onClick={() => handleDelete(item._id)}
                                                 className="text-gray-400 hover:text-red-600">
                                             <FiTrash2 className="text-lg"/>
@@ -184,7 +211,6 @@ export default function BasketPage() {
                             </div>
                         ))}
 
-                        {/* BUYURTMA QILISH */}
                         {!loading && (
                             <div className="sticky bottom-0 rounded-xl bg-white border-t border-gray-200 shadow-md p-4">
                                 {!showInput ? (
