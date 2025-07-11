@@ -15,7 +15,7 @@ export default function Page() {
     const userId = useUserId();
 
 
-    if (userId) {
+    if (!userId) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
                 <div
