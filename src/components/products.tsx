@@ -8,6 +8,7 @@ import {BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
 import toast from "react-hot-toast";
+import SkeletonWrapper from '@/components/SkeletonWrapper'; // ✅ Qo‘shildi
 
 interface Product {
     _id: string;
@@ -92,46 +93,70 @@ export default function Products({query, categoryId, userId}: Props) {
 
     const displayProducts = products.slice(0, visibleCount);
 
+    // ✅ Skeletonlar (placeholderlar)
+    const productSkeletons = Array(6).fill(null).map((_, index) => (
+        <div
+            key={index}
+            className="bg-white rounded-3xl shadow-xl p-4 flex flex-col items-center animate-pulse"
+        >
+            <div className="bg-gray-200 rounded-full w-[120px] h-[120px] mb-4"/>
+            <div className="h-4 bg-gray-200 w-3/4 rounded mb-2"/>
+            <div className="h-4 bg-gray-200 w-1/2 rounded mb-2"/>
+        </div>
+    ));
+
     return (
         <div className="px-3">
-            <div>
-                <h1 className={'text-center text-2xl font-bold p-1 text-yellow-500'}>Maxsulotlar</h1>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-6">
-                {displayProducts.map((product) => (
-                    <div
-                        key={product._id}
-                        onClick={() => handleProductClick(product._id)}
-                        className="cursor-pointer bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 p-4 flex flex-col items-center"
-                    >
-                        <div
-                            className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center overflow-hidden mb-4">
-                            <Image
-                                src={product.image}
-                                alt={product.name}
-                                width={120}
-                                height={120}
-                                className="object-cover w-full h-full rounded-full"
-                            />
-                        </div>
-
-                        <h2 className="text-base font-semibold text-gray-800 mb-2 text-center">{product.name}</h2>
-                        <div className="flex justify-between items-center w-full px-2 mt-auto">
-                            <span className="text-yellow-600 font-bold text-sm">{product.price} {"so'm"}</span>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedProduct(product);
-                                }}
-                                className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-full transition"
-                            >
-                                <FaShoppingBasket/>
-                            </button>
-                        </div>
+            <SkeletonWrapper
+                fallback={
+                    <div className="text-center text-2xl font-bold p-1">
+                        <div className="w-40 h-6 bg-gray-200 rounded mx-auto animate-pulse"/>
                     </div>
-                ))}
-            </div>
+                }
+            >
+                <div>
+                    <h1 className="text-center text-2xl font-bold p-1 text-yellow-500">Maxsulotlar</h1>
+                </div>
+            </SkeletonWrapper>
+
+            <SkeletonWrapper fallback={
+                <div className="grid grid-cols-2 gap-3 mt-6">{productSkeletons}</div>
+            }>
+                <div className="grid grid-cols-2 gap-3 mt-6">
+                    {displayProducts.map((product) => (
+                        <div
+                            key={product._id}
+                            onClick={() => handleProductClick(product._id)}
+                            className="cursor-pointer bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 p-4 flex flex-col items-center"
+                        >
+                            <div
+                                className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center overflow-hidden mb-4">
+                                <Image
+                                    src={product.image}
+                                    alt={product.name}
+                                    width={120}
+                                    height={120}
+                                    className="object-cover w-full h-full rounded-full"
+                                />
+                            </div>
+                            <h2 className="text-base font-semibold text-gray-800 mb-2 text-center">{product.name}</h2>
+                            <div className="flex justify-between items-center w-full px-2 mt-auto">
+                                <span className="text-yellow-600 font-bold text-sm">{product.price} {"so'm"}</span>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedProduct(product);
+                                    }}
+                                    className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-full transition"
+                                >
+                                    <FaShoppingBasket/>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </SkeletonWrapper>
 
             {products.length === 0 && (
                 <div>
@@ -148,20 +173,18 @@ export default function Products({query, categoryId, userId}: Props) {
                 </div>
             )}
 
-
-            <div className={'w-full mt-6 h-[5vh] mb-6 flex justify-center'}>
+            <div className="w-full mt-6 h-[5vh] mb-6 flex justify-center">
                 {visibleCount < products.length && (
-                    <div className={''}>
-                        <button
-                            onClick={() => setVisibleCount(visibleCount + 6)}
-                            className="bg-yellow-600 text-white px-6 py-3 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
-                        >
-                            {"Yana ko‘rish"}
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setVisibleCount(visibleCount + 6)}
+                        className="bg-yellow-600 text-white px-6 py-3 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
+                    >
+                        Yana ko‘rish
+                    </button>
                 )}
             </div>
 
+            {/* Modal: Savatga qo‘shish */}
             {selectedProduct && (
                 <div
                     className="w-full h-[91%] fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl px-6 pt-4 pb-6 z-50 animate-slide-up overflow-y-auto">
@@ -175,9 +198,9 @@ export default function Products({query, categoryId, userId}: Props) {
                         </button>
                     </div>
 
-                    <div className={'flex justify-center  w-full'}>
+                    <div className="flex justify-center w-full">
                         <div
-                            className="w-[180px]  h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
+                            className="w-[180px] h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
                             <Image
                                 src={selectedProduct.image}
                                 alt={selectedProduct.name}
@@ -210,17 +233,16 @@ export default function Products({query, categoryId, userId}: Props) {
                                     }
                                 }}
                                 onBlur={() => {
-                                    if (count < 1) setCount(1); // inputdan chiqishda kamida 1 bo‘lsin
+                                    if (count < 1) setCount(1);
                                 }}
                                 className="w-14 text-center border border-gray-300 rounded px-1 py-1 text-md font-medium text-gray-800"
                             />
-
                             <button onClick={() => setCount(count + 1)}
                                     className="bg-gray-200 w-9 h-9 rounded-full text-xl font-bold text-gray-800 hover:bg-gray-300">+
                             </button>
                         </div>
                         <span className="text-yellow-600 text-lg font-bold">
-                            {selectedProduct.price * count} {"so‘m"}
+                            {selectedProduct.price * count} so‘m
                         </span>
                     </div>
 
