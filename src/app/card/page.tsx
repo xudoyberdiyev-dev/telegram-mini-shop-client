@@ -142,6 +142,7 @@ export default function BasketPage() {
     };
 
     useEffect(() => {
+        setLoadingAll(true);
         if (userId) {
             fetchBasket().then((count) => {
                 if (count === 0) {
@@ -154,6 +155,7 @@ export default function BasketPage() {
             setLoadingAll(false);
         }
     }, [userId]);
+
 
     useEffect(() => {
         const newTotal = items.reduce((acc, item) => acc + item.total_price, 0);
