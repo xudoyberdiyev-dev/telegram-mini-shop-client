@@ -80,7 +80,8 @@ export default function BasketPage() {
         try {
             if (!userId) return;
             const res = await axios.get(`${BASE_URL}/order/user/${userId}`);
-            setUserOrders(res.data.orders || []);
+            const orders = res.data?.orders;
+            setUserOrders(Array.isArray(orders) ? orders : []);
         } catch {
             toast.error('Buyurtmalarni olishda xatolik');
         }
@@ -142,27 +143,23 @@ export default function BasketPage() {
     };
 
     useEffect(() => {
+        if (!userId) return;
         setLoadingAll(true);
-        if (userId) {
-            fetchBasket().then((count) => {
-                if (count === 0) {
-                    fetchOrders().finally(() => setLoadingAll(false));
-                } else {
-                    setLoadingAll(false);
-                }
-            });
-        } else {
-            setLoadingAll(false);
-        }
+        fetchBasket().then((count) => {
+            if (count === 0) {
+                fetchOrders().finally(() => setLoadingAll(false));
+            } else {
+                setLoadingAll(false);
+            }
+        });
     }, [userId]);
-
 
     useEffect(() => {
         const newTotal = items.reduce((acc, item) => acc + item.total_price, 0);
         setTotalPrice(newTotal);
     }, [items]);
 
-    if (loadingAll) return <Loading />;
+    if (!userId || loadingAll) return <Loading />;
 
     return (
         <div className="bg-[#FAFAF5] min-h-screen">
@@ -175,8 +172,12 @@ export default function BasketPage() {
                             <div key={item._id}
                                  className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3">
                                 <div className="w-[90px] h-[100px] flex items-center justify-center overflow-hidden">
-                                    <Image src={item.product.image} alt={item.product.name} width={90} height={100}
-                                           className="rounded-lg object-contain"/>
+                                    {item.product.image ? (
+                                        <Image src={item.product.image} alt={item.product.name} width={90} height={100}
+                                               className="rounded-lg object-contain"/>
+                                    ) : (
+                                        <div className="bg-gray-300 w-[90px] h-[100px] rounded-lg"/>
+                                    )}
                                 </div>
                                 <div className="flex-1 flex flex-col justify-between text-sm">
                                     <p className="font-semibold text-gray-900 leading-tight mb-1">{item.product.name}</p>
@@ -231,8 +232,7 @@ export default function BasketPage() {
                                     </button>
                                 ) : (
                                     <>
-                                        <p className="mb-3 text-gray-700 font-medium">Rostdan ham buyurtma
-                                            bermoqchimisiz?</p>
+                                        <p className="mb-3 text-gray-700 font-medium">Rostdan ham buyurtma bermoqchimisiz?</p>
                                         <div className="flex justify-between items-center gap-2">
                                             <span className="text-gray-700 font-medium whitespace-nowrap">Umumiy narx:
                                                 <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
