@@ -177,7 +177,7 @@ export default function Products({query, categoryId, userId}: Props) {
                 {visibleCount < products.length && (
                     <button
                         onClick={() => setVisibleCount(visibleCount + 6)}
-                        className="bg-yellow-600 text-white px-3 py-3 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
+                        className="bg-yellow-600 text-white px-6 py-1 font-semibold rounded-full text-sm font-medium hover:bg-yellow-900 transition"
                     >
                         Yana ko‘rish
                     </button>
