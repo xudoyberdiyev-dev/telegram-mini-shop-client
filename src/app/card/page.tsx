@@ -191,7 +191,7 @@ export default function BasketPage() {
                                                 type="text"
                                                 inputMode="numeric"
                                                 pattern="[0-9]*"
-                                                value={counts[item._id]?.toString() || ''}
+                                                value={typeof counts[item._id] === 'number' ? counts[item._id].toString() : '1'}
                                                 onChange={(e) => {
                                                     const val = e.target.value;
                                                     if (/^\d*$/.test(val)) {
