@@ -2,6 +2,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
+        domains: ['andstat.uz', 'shop-bot.javohir-dev.uz'],
         remotePatterns: [
             {
                 protocol: 'https',

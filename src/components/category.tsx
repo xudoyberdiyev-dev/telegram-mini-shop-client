@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import {useEffect, useState} from 'react';
+import {motion} from 'framer-motion';
 import Image from 'next/image';
 import axios from 'axios';
-import {BASE_IMAGE_URL, BASE_URL} from '@/connection/BaseUrl';
-import { APP_API } from '@/connection/AppApi';
+import {BASE_URL} from '@/connection/BaseUrl';
+import {APP_API} from '@/connection/AppApi';
 import SkeletonWrapper from '@/components/SkeletonWrapper';
 
 interface Category {
@@ -18,7 +18,7 @@ interface Props {
     onSelectCategory: (id: string | null) => void;
 }
 
-export default function CategoryFilter({ onSelectCategory }: Props) {
+export default function CategoryFilter({onSelectCategory}: Props) {
     const [categories, setCategories] = useState<Category[]>([]);
     const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -43,8 +43,8 @@ export default function CategoryFilter({ onSelectCategory }: Props) {
 
     const categorySkeletons = Array(6).fill(null).map((_, i) => (
         <div key={i} className="w-[90px] h-[110px] flex flex-col items-center animate-pulse">
-            <div className="w-[85px] h-[85px] bg-gray-200 rounded-xl mb-2" />
-            <div className="w-[70%] h-3 bg-gray-200 rounded" />
+            <div className="w-[85px] h-[85px] bg-gray-200 rounded-xl mb-2"/>
+            <div className="w-[70%] h-3 bg-gray-200 rounded"/>
         </div>
     ));
 
@@ -67,9 +67,9 @@ export default function CategoryFilter({ onSelectCategory }: Props) {
                             <div key={cat._id}>
                                 <motion.div
                                     onClick={() => handleSelect(cat._id)}
-                                    whileTap={{ scale: 0.95 }}
-                                    animate={{ scale: isActive ? 1.05 : 1 }}
-                                    transition={{ duration: 0.3 }}
+                                    whileTap={{scale: 0.95}}
+                                    animate={{scale: isActive ? 1.05 : 1}}
+                                    transition={{duration: 0.3}}
                                     className={`w-[90px] h-[90px] flex flex-col items-center justify-center cursor-pointer px-1 py-1 rounded-xl transition-all duration-300 shadow-sm ${
                                         isActive
                                             ? 'bg-yellow-100 border border-yellow-400 shadow-md'
@@ -78,7 +78,7 @@ export default function CategoryFilter({ onSelectCategory }: Props) {
                                 >
                                     <div className="w-[85px] h-[85px] relative rounded-xl overflow-hidden">
                                         <Image
-                                            src={`${BASE_IMAGE_URL}/${cat.image}`}
+                                            src={`https://shop-bot.javohir-dev.uz/uploads/${cat.image}`}
                                             alt={cat.name}
                                             fill
                                             className="object-cover"
