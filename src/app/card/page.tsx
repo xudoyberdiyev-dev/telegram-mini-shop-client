@@ -76,15 +76,17 @@ export default function BasketPage() {
         }
     }, [userId, setCartCount]);
 
-    const fetchOrders = async () => {
+    const fetchOrders = useCallback(async () => {
+        if (!userId) return;
         try {
-            if (!userId) return;
             const res = await axios.get(`${BASE_URL}/order/user/${userId}`);
-            setUserOrders(res.data.orders || []);
+            const data = Array.isArray(res.data) ? res.data : res.data.orders || [];
+            setUserOrders(data);
         } catch {
             toast.error('Buyurtmalarni olishda xatolik');
         }
-    };
+    }, [userId]);
+
 
     const handleCountChange = async (basketId: string, newCount: number) => {
         if (newCount < 1) return;
@@ -142,27 +144,30 @@ export default function BasketPage() {
     };
 
     useEffect(() => {
-        setLoadingAll(true);
-        if (userId) {
-            fetchBasket().then((count) => {
+        const loadData = async () => {
+            setLoadingAll(true);
+            if (userId) {
+                const count = await fetchBasket();
                 if (count === 0) {
-                    fetchOrders().finally(() => setLoadingAll(false));
-                } else {
-                    setLoadingAll(false);
+                    await fetchOrders();
                 }
-            });
-        } else {
+            }
             setLoadingAll(false);
-        }
+        };
+        loadData();
     }, [userId]);
-
+    useEffect(() => {
+        if (userId) {
+            fetchOrders();
+        }
+    }, [userId, fetchOrders]);
 
     useEffect(() => {
         const newTotal = items.reduce((acc, item) => acc + item.total_price, 0);
         setTotalPrice(newTotal);
     }, [items]);
 
-    if (loadingAll) return <Loading />;
+    if (loadingAll) return <Loading/>;
 
     return (
         <div className="bg-[#FAFAF5] min-h-screen">
@@ -182,7 +187,8 @@ export default function BasketPage() {
                                     <p className="font-semibold text-gray-900 leading-tight mb-1">{item.product.name}</p>
                                     <p className="text-sm font-bold text-yellow-600">{item.total_price} so‘m</p>
                                     <div className="flex items-center justify-between mt-2">
-                                        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                                        <div
+                                            className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                                             <button
                                                 onClick={() => handleCountChange(item._id, (counts[item._id] || 1) - 1)}
                                                 className="px-2 text-lg text-gray-700 hover:bg-gray-200">−
@@ -235,7 +241,8 @@ export default function BasketPage() {
                                             bermoqchimisiz?</p>
                                         <div className="flex justify-between items-center gap-2">
                                             <span className="text-gray-700 font-medium whitespace-nowrap">Umumiy narx:
-                                                <span className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
+                                                <span
+                                                    className="text-yellow-600 font-bold ml-1">{totalPrice} so‘m</span>
                                             </span>
                                             <button onClick={makeOrder} disabled={loading}
                                                     className={`flex-1 py-3 rounded-lg text-white font-semibold transition text-center ${loading ? 'bg-gray-400' : 'bg-yellow-600 hover:bg-yellow-700'}`}>
@@ -247,37 +254,37 @@ export default function BasketPage() {
                             </div>
                         )}
                     </>
-                // ) : userOrders.length > 0 ? (
-                //     <div className="w-full max-w-3xl bg-white shadow rounded-xl p-6 mb-8">
-                //         <h3 className="text-xl font-bold text-yellow-600 mb-5">📋 Buyurtmalar</h3>
-                //         <div className="space-y-4">
-                //             {userOrders.map(order => (
-                //                 <div key={order._id} className="p-4 border border-gray-200 rounded-xl shadow-sm">
-                //                     <div className="flex justify-between items-center mb-2">
-                //                         <p className="text-md font-semibold text-gray-800">📦 {order.total_price} so‘m</p>
-                //                         <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                //                             order.status === 'YUBORILDI' ? 'bg-blue-100 text-blue-700' :
-                //                                 order.status === 'BEKOR QILINDI' ? 'bg-red-100 text-red-700' :
-                //                                     order.status === 'HARIDOR QABUL QILDI' ? 'bg-green-100 text-green-700' :
-                //                                         'bg-gray-100 text-gray-700'
-                //                         }`}>{order.status}</span>
-                //                     </div>
-                //                     <div className="text-sm text-gray-600 mb-2">
-                //                         {order.products.map((p, i) => (
-                //                             <div key={i} className="flex justify-between">
-                //                                 <span>{p.product_id.name}</span>
-                //                                 <span>× {p.count}</span>
-                //                             </div>
-                //                         ))}
-                //                     </div>
-                //                     <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
-                //                     {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
-                //                         <p className="text-xs text-red-500 mt-1">📝 Sabab: {order.cancel_reason}</p>
-                //                     )}
-                //                 </div>
-                //             ))}
-                //         </div>
-                //     </div>
+                ) : userOrders.length > 0 ? (
+                    <div className="w-full max-w-3xl bg-white shadow rounded-xl p-6 mb-8">
+                        <h3 className="text-xl font-bold text-yellow-600 mb-5">📋 Buyurtmalar</h3>
+                        <div className="space-y-4">
+                            {userOrders.map(order => (
+                                <div key={order._id} className="p-4 border border-gray-200 rounded-xl shadow-sm">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <p className="text-md font-semibold text-gray-800">📦 {order.total_price} so‘m</p>
+                                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                                            order.status === 'YUBORILDI' ? 'bg-blue-100 text-blue-700' :
+                                                order.status === 'BEKOR QILINDI' ? 'bg-red-100 text-red-700' :
+                                                    order.status === 'HARIDOR QABUL QILDI' ? 'bg-green-100 text-green-700' :
+                                                        'bg-gray-100 text-gray-700'
+                                        }`}>{order.status}</span>
+                                    </div>
+                                    <div className="text-sm text-gray-600 mb-2">
+                                        {order.products.map((p, i) => (
+                                            <div key={i} className="flex justify-between">
+                                                <span>{p.product_id.name}</span>
+                                                <span>× {p.count}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <p className="text-xs text-gray-500">📅 {new Date(order.createdAt).toLocaleString('uz-UZ')}</p>
+                                    {order.status === 'BEKOR QILINDI' && order.cancel_reason && (
+                                        <p className="text-xs text-red-500 mt-1">📝 Sabab: {order.cancel_reason}</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center min-h-[70vh]">
                         <div className="bg-white rounded-xl shadow-md text-center p-6 max-w-md w-full">
