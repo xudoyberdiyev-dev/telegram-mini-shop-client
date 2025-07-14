@@ -5,7 +5,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import {FiTrash2} from 'react-icons/fi';
 import Navbar from '@/components/navbar';
-import {BASE_URL} from '@/connection/BaseUrl';
+import {BASE_IMAGE_URL, BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
 import Link from "next/link";
@@ -180,7 +180,8 @@ export default function BasketPage() {
                             <div key={item._id}
                                  className="flex w-full items-start gap-3 px-4 py-3 bg-white shadow-xl rounded-xl max-w-md mx-auto mb-3">
                                 <div className="w-[90px] h-[100px] flex items-center justify-center overflow-hidden">
-                                    <Image src={item.product.image} alt={item.product.name} width={90} height={100}
+                                    <Image src={`${BASE_IMAGE_URL}/${item.product.image}`} alt={item.product.name}
+                                           width={90} height={100}
                                            className="rounded-lg object-contain"/>
                                 </div>
                                 <div className="flex-1 flex flex-col justify-between text-sm">

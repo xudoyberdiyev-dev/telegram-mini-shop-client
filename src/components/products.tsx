@@ -4,11 +4,11 @@ import {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import {FaShoppingBasket} from 'react-icons/fa';
-import {BASE_URL} from '@/connection/BaseUrl';
+import {BASE_IMAGE_URL, BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
 import toast from "react-hot-toast";
-import SkeletonWrapper from '@/components/SkeletonWrapper'; // ✅ Qo‘shildi
+import SkeletonWrapper from '@/components/SkeletonWrapper';
 
 interface Product {
     _id: string;
@@ -93,7 +93,6 @@ export default function Products({query, categoryId, userId}: Props) {
 
     const displayProducts = products.slice(0, visibleCount);
 
-    // ✅ Skeletonlar (placeholderlar)
     const productSkeletons = Array(6).fill(null).map((_, index) => (
         <div
             key={index}
@@ -133,7 +132,7 @@ export default function Products({query, categoryId, userId}: Props) {
                             <div
                                 className="bg-gray-100 rounded-full w-[120px] h-[120px] flex items-center justify-center overflow-hidden mb-4">
                                 <Image
-                                    src={product.image}
+                                    src={`${BASE_IMAGE_URL}/${product.image}`}
                                     alt={product.name}
                                     width={120}
                                     height={120}
@@ -202,7 +201,7 @@ export default function Products({query, categoryId, userId}: Props) {
                         <div
                             className="w-[180px] h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
                             <Image
-                                src={selectedProduct.image}
+                                src={`${BASE_IMAGE_URL}/${selectedProduct.image}`}
                                 alt={selectedProduct.name}
                                 width={180}
                                 height={180}

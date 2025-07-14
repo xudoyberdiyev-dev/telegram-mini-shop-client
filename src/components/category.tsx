@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import axios from 'axios';
-import { BASE_URL } from '@/connection/BaseUrl';
+import {BASE_IMAGE_URL, BASE_URL} from '@/connection/BaseUrl';
 import { APP_API } from '@/connection/AppApi';
 import SkeletonWrapper from '@/components/SkeletonWrapper';
 
@@ -78,7 +78,7 @@ export default function CategoryFilter({ onSelectCategory }: Props) {
                                 >
                                     <div className="w-[85px] h-[85px] relative rounded-xl overflow-hidden">
                                         <Image
-                                            src={cat.image}
+                                            src={`${BASE_IMAGE_URL}/${cat.image}`}
                                             alt={cat.name}
                                             fill
                                             className="object-cover"
