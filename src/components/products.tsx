@@ -199,7 +199,7 @@ export default function Products({query, categoryId, userId}: Props) {
 
                     <div className="flex justify-center w-full">
                         <div
-                            className="w-[180px] h-[180px] rounded-full overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
+                            className="w-[300px] h-[200px] rounded-md overflow-hidden flex justify-center items-center mb-6 bg-gray-100">
                             <Image
                                 src={`https://shop-bot.javohir-dev.uz/uploads/${selectedProduct.image}`}
                                 alt={selectedProduct.name}

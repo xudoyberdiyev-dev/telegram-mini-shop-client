@@ -15,14 +15,14 @@ export default function Page() {
     const userId = useUserId();
 
 
-    if (!userId) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
-                <div
-                    className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
-            </div>
-        );
-    }
+    // if (!userId) {
+    //     return (
+    //         <div className="min-h-screen flex items-center justify-center bg-[#FAFAF5]">
+    //             <div
+    //                 className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="bg-[#FAFAF5] min-h-screen">
