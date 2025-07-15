@@ -203,8 +203,8 @@ export default function Products({query, categoryId, userId}: Props) {
                             <Image
                                 src={`https://shop-bot.javohir-dev.uz/uploads/${selectedProduct.image}`}
                                 alt={selectedProduct.name}
-                                width={180}
-                                height={180}
+                                width={300}
+                                height={200}
                                 className="w-full h-full object-cover rounded-full"
                             />
                         </div>
