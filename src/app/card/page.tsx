@@ -5,7 +5,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import {FiTrash2} from 'react-icons/fi';
 import Navbar from '@/components/navbar';
-import {BASE_IMAGE_URL, BASE_URL} from '@/connection/BaseUrl';
+import {BASE_URL} from '@/connection/BaseUrl';
 import {APP_API} from '@/connection/AppApi';
 import {useCartStore} from '@/utils/cartStore';
 import Link from "next/link";
