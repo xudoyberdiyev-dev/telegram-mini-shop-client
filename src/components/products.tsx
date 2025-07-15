@@ -205,7 +205,7 @@ export default function Products({query, categoryId, userId}: Props) {
                                 alt={selectedProduct.name}
                                 width={300}
                                 height={200}
-                                className="w-full h-full object-cover rounded-full"
+                                className="w-full h-full object-cover rounded-md"
                             />
                         </div>
                     </div>
